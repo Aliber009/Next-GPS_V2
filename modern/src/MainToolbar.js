@@ -70,7 +70,7 @@ const MainToolbar = () => {
 
   return (
     <>
-      <AppBar position="static" className={classes.appBar}>
+      <AppBar position="static"  style={{backgroundColor: "#be0000"}} className={classes.appBar}>
         <Toolbar>
           <IconButton
             className={classes.menuButton}
@@ -78,8 +78,8 @@ const MainToolbar = () => {
             onClick={openDrawer}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.flex}>
-            Traccar
+          <Typography style={{letterSpacing: 7}} variant="h6" color="inherit" className={classes.flex}>
+            NEXTRACKER
           </Typography>
           <Button color="inherit" onClick={handleLogout}>{t('loginLogout')}</Button>
         </Toolbar>
@@ -184,7 +184,7 @@ const MainToolbar = () => {
               <ListItemIcon>
                 <StorageIcon />
               </ListItemIcon>
-              <ListItemText primary={t('sharedComputedAttributes')} />
+              <ListItemText primary={t('sharedComputedAttributes')}/>
             </ListItem>
             <ListItem button onClick={() => history.push('/settings/maintenances')}>
               <ListItemIcon>
