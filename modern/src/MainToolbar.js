@@ -70,16 +70,16 @@ const MainToolbar = () => {
 
   return (
     <>
-      <AppBar position="static"  style={{backgroundColor: "#be0000"}} className={classes.appBar}>
-        <Toolbar>
+      <AppBar style={{backgroundColor:'#d44000'}}position="static" className={classes.appBar}>
+        <Toolbar >
           <IconButton
             className={classes.menuButton}
             color="inherit"
             onClick={openDrawer}>
             <MenuIcon />
           </IconButton>
-          <Typography style={{letterSpacing: 7}} variant="h6" color="inherit" className={classes.flex}>
-            NEXTRACKER
+          <Typography  style={{fontFamily:'Trebuchet MS'}} variant="h6" color="inherit" className={classes.flex}>
+            N E X T R A C K E R
           </Typography>
           <Button color="inherit" onClick={handleLogout}>{t('loginLogout')}</Button>
         </Toolbar>
@@ -184,7 +184,7 @@ const MainToolbar = () => {
               <ListItemIcon>
                 <StorageIcon />
               </ListItemIcon>
-              <ListItemText primary={t('sharedComputedAttributes')}/>
+              <ListItemText primary={t('sharedComputedAttributes')} />
             </ListItem>
             <ListItem button onClick={() => history.push('/settings/maintenances')}>
               <ListItemIcon>

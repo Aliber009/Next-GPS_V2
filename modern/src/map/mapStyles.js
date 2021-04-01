@@ -5,6 +5,7 @@ export const styleCustom = (url, attribution) => ({
       type: 'raster',
       tiles: [url],
       attribution: attribution,
+      tileSize: 124,
     },
   },
   glyphs: 'https://cdn.traccar.com/map/fonts/{fontstack}/{range}.pbf',
@@ -16,7 +17,7 @@ export const styleCustom = (url, attribution) => ({
 });
 
 export const styleOsm = () => styleCustom(
-  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  'https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga',
   '© <a target="_top" rel="noopener" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 );
 
