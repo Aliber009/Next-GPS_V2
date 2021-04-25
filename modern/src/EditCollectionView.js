@@ -13,8 +13,10 @@ import RemoveDialog from './RemoveDialog';
 const useStyles = makeStyles(theme => ({
   fab: {
     position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
+  
+     top: theme.spacing(10)+"%",
+    
+    right: theme.spacing(5.8)+"%", 
   },
 }));
 
@@ -63,7 +65,7 @@ const EditCollectionView = ({ content, editPath, endpoint }) => {
     <>
       <Content updateTimestamp={updateTimestamp} onMenuClick={menuShow} />
       {adminEnabled && 
-        <Fab size="medium" color="primary" className={classes.fab} onClick={handleAdd}>
+        <Fab  size="medium" color="primary" className={classes.fab} onClick={handleAdd}>
           <AddIcon />
         </Fab>
       }

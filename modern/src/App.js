@@ -29,6 +29,9 @@ import ComputedAttributePage from './settings/ComputedAttributePage';
 import MaintenancesPage from './settings/MaintenancesPage';
 import MaintenancePage from './settings/MaintenancePage';
 import StatisticsPage from './admin/StatisticsPage';
+import missionPage from './missionsPage'
+import Mission from './mission'
+import BasicTable from './missionSummary'
 
 const App = () => {
   const initialized = useSelector(state => !!state.session.server && !!state.session.user);
@@ -66,6 +69,9 @@ const App = () => {
               <Route exact path='/reports/stop' component={StopReportPage} />
               <Route exact path='/reports/summary' component={SummaryReportPage} />
               <Route exact path='/reports/chart' component={ChartReportPage} />
+              <Route exact path='/reports/missions' component={missionPage} />
+              <Route exact path='/reports/mission' component={Mission} />
+              <Route exact path='/reports/missionSummary' component={BasicTable} />
             </Switch>
           )}
         </Route>

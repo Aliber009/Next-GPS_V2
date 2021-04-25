@@ -35,7 +35,7 @@ const UsersView = ({ updateTimestamp, onMenuClick }) => {
           <TableCell>{t('sharedName')}</TableCell>
           <TableCell>{t('userEmail')}</TableCell>
           <TableCell>{t('userAdmin')}</TableCell>
-          <TableCell>{t('sharedDisabled')}</TableCell>
+          <TableCell>Phone</TableCell> 
         </TableRow>
       </TableHead>
       <TableBody>
@@ -48,8 +48,8 @@ const UsersView = ({ updateTimestamp, onMenuClick }) => {
             </TableCell>
             <TableCell>{item.name}</TableCell>
             <TableCell>{item.email}</TableCell>
-            <TableCell>{formatBoolean(item, 'administrator')}</TableCell>
-            <TableCell>{formatBoolean(item, 'disabled')}</TableCell>
+            <TableCell>{(item.administrator).toString()}</TableCell>
+            <TableCell>{item.phone}</TableCell> 
           </TableRow>
         ))}
       </TableBody>

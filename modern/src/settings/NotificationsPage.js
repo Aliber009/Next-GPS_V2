@@ -7,6 +7,7 @@ import { useEffectAsync } from '../reactHelper';
 import EditCollectionView from '../EditCollectionView';
 import { prefixString } from '../common/stringUtils';
 import { formatBoolean } from '../common/formatter';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
   columnAction: {
@@ -39,6 +40,7 @@ const NotificationsView = ({ updateTimestamp, onMenuClick }) => {
   };
 
   return (
+    <>
     <TableContainer>
     <Table>
       <TableHead>
@@ -65,8 +67,11 @@ const NotificationsView = ({ updateTimestamp, onMenuClick }) => {
           </TableRow>
         ))}
       </TableBody>
+      
     </Table>
+    
     </TableContainer>
+  </>
   );
 }
 

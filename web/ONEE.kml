@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>ONEE</name>
+    <description/>
+    <Style id="icon-1899-0288D1-nodesc-normal">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>/powr.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <Style id="icon-1899-0288D1-nodesc-highlight">
+      <IconStyle>
+        <color>ffd18802</color>
+        <scale>1</scale>
+        <Icon>
+          <href>/powr.png</href>
+        </Icon>
+        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+      </LabelStyle>
+      <BalloonStyle>
+        <text><![CDATA[<h3>$[name]</h3>]]></text>
+      </BalloonStyle>
+    </Style>
+    <StyleMap id="icon-1899-0288D1-nodesc">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1899-0288D1-nodesc-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1899-0288D1-nodesc-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>officee</name>
+      <Placemark>
+        <name></name>
+        <styleUrl>#placemark-red</styleUrl>
+        <Point>
+          <coordinates>
+            -7.6244152,33.5844235,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ONEE - BRANCHE ELECTRICITE - DIRECTION REGIONALE RABAT -</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -6.8307582,34.0174783,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>siège ONEE Branche électricité</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.9602331,32.2377269,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Centre Fedalate Onee Branche Eau</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.3039599,33.5677102,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[ONE ( office National d'électricité ) Tassoultante]]></name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.9843646,31.5731614,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Centre d'estivage COS'ONE à Marrakech.]]></name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -8.0552054,31.6476899,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>onee</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -8.0191589,31.6286731,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ONE - Siège Principal de Settat</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.6182139,32.9971465,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ONE</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -9.7348148,29.6924333,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>O.N.E</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -4.5446277,33.8350607,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Agence ONE Nouaceur</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.543926,33.387527,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>One Casa</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.6240407,33.5844947,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ONE Sidi Maarouf</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.6458848,33.5234193,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>O.N.E Bousskoura</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.6504098,33.4579705,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ONEE Roches Noires</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.5716347,33.6079403,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ONEE - BRANCHE ELECTRICITE - DIRECTION REGIONALE RABAT -</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -6.8307582,34.0174783,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ONEE - Branche Eau</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -6.8016096,33.9418563,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Onee branche électricité à côté Essalam</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.6732163,33.5436976,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Onee</name>
+        <styleUrl>#icon-1899-0288D1-nodesc</styleUrl>
+        <Point>
+          <coordinates>
+            -7.624409,33.584432,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>

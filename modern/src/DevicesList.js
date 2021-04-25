@@ -10,7 +10,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-
+import SimpleList from './listgeo'
 import { devicesActions } from './store';
 import EditCollectionView from './EditCollectionView';
 import { useEffectAsync } from './reactHelper';
@@ -27,11 +27,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const DeviceView = ({ updateTimestamp, onMenuClick }) => {
+const DeviceView = ({ deviceId,updateTimestamp, onMenuClick }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const items = useSelector(state => Object.values(state.devices.items));
+  const device = useSelector(state => state.devices.items[deviceId]);
 
   useEffectAsync(async () => {
     const response = await fetch('/api/devices');
@@ -41,7 +42,9 @@ const DeviceView = ({ updateTimestamp, onMenuClick }) => {
   }, [updateTimestamp]);
 
   return (
-    <List className={classes.list}>
+    <div style={{maxHeight:'100%'}}>
+      
+    <List className={classes.list} >
       {items.map((item, index, list) => (
         <Fragment key={item.id}>
           <ListItem button key={item.id} onClick={() => dispatch(devicesActions.select(item))}>
@@ -50,7 +53,7 @@ const DeviceView = ({ updateTimestamp, onMenuClick }) => {
                 <img className={classes.icon} src={`images/icon/${item.category || 'default'}.svg`} alt="" />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={item.name} secondary={item.uniqueId} />
+            <ListItemText primary={item.name} secondary={item.status} />
             <ListItemSecondaryAction>
               <IconButton onClick={(event) => onMenuClick(event.currentTarget, item.id)}>
                 <MoreVertIcon />
@@ -61,6 +64,11 @@ const DeviceView = ({ updateTimestamp, onMenuClick }) => {
         </Fragment>
       ))}
     </List>
+    
+    {/* <div >
+    <SimpleList />
+    </div> */}
+    </div>
   );
 }
 

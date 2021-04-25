@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { sessionActions } from './store';
 import AppBar from '@material-ui/core/AppBar';
@@ -32,20 +32,46 @@ import FolderIcon from '@material-ui/icons/Folder';
 import ReplayIcon from '@material-ui/icons/Replay';
 import BuildIcon from '@material-ui/icons/Build';
 import t from './common/localization';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+
+import Badge from '@material-ui/core/Badge';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import { useEffectAsync } from './reactHelper';
+
+
+
 
 const useStyles = makeStyles(theme => ({
-  flex: {
-    flexGrow: 1
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
+  grow: {
+    flexGrow: 1,
   },
   list: {
-    width: 250
+    width: 250,
   },
   menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+  },
+  
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
   },
 }));
 
@@ -56,6 +82,21 @@ const MainToolbar = () => {
   const history = useHistory();
   const adminEnabled = useSelector(state => state.session.user && state.session.user.administrator);
   const userId = useSelector(state => state.session.user && state.session.user.id);
+  const [notifCount,setnotifCount] = useState(0)
+
+  useEffectAsync(async () => {
+    const res= await fetch('http://127.0.0.1:5000/missions',{method:'GET'})
+    if(res.ok){
+    const json= await res.json();
+     if(json.length>0){
+         setnotifCount(json.length)
+     }
+     }
+ }, []);
+
+
+
+
 
   const openDrawer = () => { setDrawer(true) }
   const closeDrawer = () => { setDrawer(false) }
@@ -67,23 +108,132 @@ const MainToolbar = () => {
       history.push('/login');
     }
   }
+ 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const menuId = 'primary-search-account-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+    </Menu>
+  );
+
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      
+      <MenuItem onClick={()=>history.push('/reports/missions')}>
+        <IconButton aria-label="show notifications" color="inherit" >
+          <Badge badgeContent={notifCount} color="secondary">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <p>Notifications</p>
+      </MenuItem>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        <p>Profile</p>
+      </MenuItem>
+    </Menu>
+  );
+
+  
+
 
   return (
     <>
-      <AppBar style={{backgroundColor:'#d44000'}}position="static" className={classes.appBar}>
-        <Toolbar >
+      
+      <AppBar style={{backgroundColor:"#c64756"}} position="static">
+        <Toolbar>
           <IconButton
-            className={classes.menuButton}
-            color="inherit"
-            onClick={openDrawer}>
-            <MenuIcon />
+           className={classes.menuButton}
+           color="inherit"
+           onClick={openDrawer}>
+           <MenuIcon />
           </IconButton>
-          <Typography  style={{fontFamily:'Trebuchet MS'}} variant="h6" color="inherit" className={classes.flex}>
+          <Typography className={classes.title} variant="h6" noWrap>
             N E X T R A C K E R
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>{t('loginLogout')}</Button>
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>
+      
+            <IconButton aria-label="show notifications" color="inherit" onClick={()=>history.push('/reports/missions')}>
+              <Badge badgeContent={notifCount} color="primary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+          </div>
+          <div className={classes.sectionMobile}>
+            <IconButton
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </div>
+          <Button  style={{marginLeft:30}} color="inherit" onClick={handleLogout}>DECONNEXION</Button>
         </Toolbar>
       </AppBar>
+      {renderMobileMenu}
+      {renderMenu}
       <Drawer open={drawer} onClose={closeDrawer}>
         <div
           tabIndex={0}
@@ -180,18 +330,19 @@ const MainToolbar = () => {
               </ListItemIcon>
               <ListItemText primary={t('sharedDrivers')} />
             </ListItem>
-            <ListItem button onClick={() => history.push('/settings/attributes')}>
+            <ListItem button onClick={() => history.push('/reports/missions')}>
               <ListItemIcon>
-                <StorageIcon />
+                <AssignmentTurnedInIcon />
               </ListItemIcon>
-              <ListItemText primary={t('sharedComputedAttributes')} />
+              <ListItemText primary="Missions" />
             </ListItem>
+             {/*
             <ListItem button onClick={() => history.push('/settings/maintenances')}>
               <ListItemIcon>
                 <BuildIcon />
               </ListItemIcon>
               <ListItemText primary={t('sharedMaintenance')} />
-            </ListItem>
+            </ListItem> */}
           </List>
           {adminEnabled && (
             <>

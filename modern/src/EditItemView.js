@@ -59,7 +59,9 @@ const EditItemView = ({ children, endpoint, item, setItem }) => {
     <>
       <MainToolbar />
       <Container maxWidth='xs' className={classes.container}>
-        {children}
+      
+         {children}
+         
         <FormControl fullWidth margin='normal'>
           <div className={classes.buttons}>
             <Button type='button' color='primary' variant='outlined' onClick={() => history.goBack()}>
