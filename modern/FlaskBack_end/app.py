@@ -3,6 +3,7 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
+from datetime import datetime
 #from flask_classful import FlaskView, route
 
 app = Flask(__name__)
@@ -38,12 +39,16 @@ class mission_users(db.Model):
     nameUser = db.Column(db.String(100))
     notified = db.Column(db.Boolean)
     missionID = db.Column(db.Integer)
+    startDate = db.Column(db.DateTime)
+    endDate = db.Column(db.DateTime)
 
 
-def __init__(self, nameUser, notified,  missionID):
+def __init__(self, nameUser, notified,  missionID, startDate, endDate):
     self.nameUser = nameUser
     self.notified = notified
     self.missionID = missionID
+    self.endDate = endDate
+    self.startDate = startDate
 
 
 def __repr__(self):
@@ -60,7 +65,7 @@ def handle_mission_users():
         if request.is_json:
             data = request.get_json()
             new_mission_users = mission_users(
-                nameUser=data['nameUser'], notified=False,  missionID=data['missionID'])
+                nameUser=data['nameUser'], notified=False,  missionID=data['missionID'], startDate=datetime.now())
             db.session.add(new_mission_users)
             db.session.commit()
             return {"message": f"mission {new_mission_users.nameUser} has been created successfully."}
@@ -74,7 +79,9 @@ def handle_mission_users():
                 "id": user.id,
                 "nameUser": user.nameUser,
                 "notified": user.notified,
-                "missionID": user.missionID
+                "missionID": user.missionID,
+                "startDate": user.startDate,
+                "endDate": user.endDate
 
             } for user in users]
 
@@ -88,6 +95,7 @@ def handle_mission_user(mission_users_id):
         data = request.get_json()
         mission_user.nameUser = data['nameUser']
         mission_user.notified = data['notified']
+        mission_user.endDate = data['endDate']
     #mission_user.missionID = data['missionID']
 
         db.session.add(mission_user)

@@ -81,18 +81,23 @@ const MainToolbar = () => {
   const classes = useStyles();
   const history = useHistory();
   const adminEnabled = useSelector(state => state.session.user && state.session.user.administrator);
+  const ActualUser = useSelector(state => state.session.user)
   const userId = useSelector(state => state.session.user && state.session.user.id);
   const [notifCount,setnotifCount] = useState(0)
 
+
+  
   useEffectAsync(async () => {
-    const res= await fetch('http://127.0.0.1:5000/missions',{method:'GET'})
-    if(res.ok){
-    const json= await res.json();
-     if(json.length>0){
-         setnotifCount(json.length)
-     }
-     }
- }, []);
+    var miss=[]
+    const resUser = await fetch('http://127.0.0.1:5000/mission_users',{method:'GET'})
+    if(resUser.ok)
+    {
+    const jsonUser = await resUser.json();
+    miss=jsonUser.filter(i=>i.nameUser==ActualUser.name)
+    
+    }
+    setnotifCount(miss.length)
+  },[]);
 
 
 
@@ -335,6 +340,12 @@ const MainToolbar = () => {
                 <AssignmentTurnedInIcon />
               </ListItemIcon>
               <ListItemText primary="Missions" />
+            </ListItem>
+            <ListItem button onClick={() => history.push('/settings/maintenances')}>
+              <ListItemIcon>
+                <BuildIcon />
+              </ListItemIcon>
+              <ListItemText primary={t('sharedMaintenance')} />
             </ListItem>
              {/*
             <ListItem button onClick={() => history.push('/settings/maintenances')}>

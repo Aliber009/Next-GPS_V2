@@ -8,6 +8,7 @@ import { Accordion, AccordionSummary, AccordionDetails, makeStyles, Typography }
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditAttributesView from './attributes/EditAttributesView';
 import LinkField from './form/LinkField';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(() => ({
   details: {
@@ -17,7 +18,7 @@ const useStyles = makeStyles(() => ({
 
 const UserPage = () => {
   const classes = useStyles();
-
+  const adminEnabled = useSelector(state => state.session.user && state.session.user.administrator);
   const [item, setItem] = useState();
   const [checked, setChecked] = useState(false);
 
@@ -59,15 +60,18 @@ const UserPage = () => {
                 variant="filled" />
                  
             </AccordionDetails>
-            
+            { adminEnabled &&
+            <div>
             <Typography style={{display:"flex", marginLeft:25,marginBottom:-35}} variant="button"  >ADMIN </Typography>
+            
             <Checkbox style={{marginLeft:300}}
                 checked={item.administrator || false}
                 onChange={e=>setItem({...item,administrator: (e.target.checked)})}
                 color="primary"
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
-                
+                </div>
+              }
           </Accordion>
           <Accordion disabled={!item.administrator}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>

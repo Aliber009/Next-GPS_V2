@@ -29,8 +29,11 @@ const PositionPage = () => {
           'Accept': 'application/json'
         },
       });
+
+      console.log("response",response)
       if (response.ok) {
         const items = await response.json();
+        console.log(items)
         setItem(items[0]);
       }
     } else {

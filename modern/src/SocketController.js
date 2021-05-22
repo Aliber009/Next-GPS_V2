@@ -40,6 +40,7 @@ const SocketController = () => {
         dispatch(devicesActions.update(data.devices));
       }
       if (data.positions) {
+        
         dispatch(positionsActions.update(data.positions));
       }
       if (data.events) {

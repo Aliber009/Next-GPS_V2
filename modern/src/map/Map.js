@@ -13,6 +13,7 @@ const element = document.createElement('div');
 element.style.width = '100%';
 element.style.height = '100%';
 
+//mapboxgl.accessToken="pk.eyJ1IjoiYWxpYmVybzAwOSIsImEiOiJja240ZGZvcngwNXBqMndvZnF1MThjZHVnIn0.3HjoQt279wR8tla2b2OHiA"
 export const map = new mapboxgl.Map({
   container: element,
   style: styleOsm(),
@@ -106,7 +107,6 @@ const Map = ({ children }) => {
 
   return (
     <div style={{ width: '100%', height: '100%' }} ref={containerEl}>
-      
       {mapReady && children}
     </div>
   );

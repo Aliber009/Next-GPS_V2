@@ -32,7 +32,10 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
         <TableRow>
           <TableCell className={classes.columnAction} />
           <TableCell>{t('sharedName')}</TableCell>
-          <TableCell>{t('deviceIdentifier')}</TableCell>
+          <TableCell>CIN</TableCell>
+          <TableCell>Matricule</TableCell>
+          <TableCell>Telephone</TableCell>
+          
         </TableRow>
       </TableHead>
       <TableBody>

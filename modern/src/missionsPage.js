@@ -159,7 +159,7 @@ export default function SwitchListSecondary() {
 
   return (
     <div className={classes.rot}>
-    <MainToolbar />
+    <MainToolbar/>
     <List subheader={<ListSubheader align='center'> 
     <Typography variant="h5" gutterBottom>
         Missions
@@ -180,7 +180,21 @@ export default function SwitchListSecondary() {
            
            
             setch(()=>{
-           const list=ch.map((j,k)=>{if(k==index){ j={...j, "notified" : e.target.checked};console.log(j);switcher(j) ;return j }else{return j}}); return list})
+           const list=ch.map((j,k)=>{
+             if(k==index)
+             { 
+               if(e.target.checked)
+               {
+                 j={...j, "notified" : e.target.checked,"endDate": new Date()}
+                }
+                else
+                {
+                  j={...j, "notified" : e.target.checked,"endDate": null}
+                }
+               
+               switcher(j) ;
+               return j }
+               else{return j}}); return list})
 
             } 
           }

@@ -87,11 +87,11 @@ const MainPage = ({ width }) => {
         
         <div className={classes.mapContainer}>
       
-        <GeofenceEditMap/>
+         <GeofenceEditMap/> 
           <ContainerDimensions>
        
             <Map>
-              <GeofenceMap />
+               {/* <GeofenceMap />   */}
               <CurrentLocationMap />
               <AccuracyMap />
               <CurrentPositionsMap />

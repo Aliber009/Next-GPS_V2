@@ -1,26 +1,20 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
+
 import { map } from './Map';
 import { useEffectAsync } from '../reactHelper';
 import { geofenceToFeature } from './mapUtil';
 
-
-
-const GeofenceMap = () => {
+const GeofenceMap = (props) => {
   const id = 'geofences';
-  
-  const [geofences, setGeofences] = useState([]);
-  const [countgeo,setcountgeo]=useState(false)
 
- 
+/*   const [geofences, setGeofences] = useState([]);
+
   useEffectAsync(async () => {
     const response = await fetch('/api/geofences');
     if (response.ok) {
       setGeofences(await response.json());
     }
-    
-  
-  }, [countgeo]);
-  
+  }, []); */
 
   useEffect(() => {
     map.addSource(id, {
@@ -39,8 +33,8 @@ const GeofenceMap = () => {
          ['==', '$type', 'Polygon'],
       ],
       'paint': {
-         'fill-color':'#25ABFF',
-         'fill-outline-color':'#25ABFF',
+         'fill-color':'#3bb2d0',
+         'fill-outline-color':'#3bb2d0',
          'fill-opacity':0.1,
       },
     });
@@ -49,12 +43,12 @@ const GeofenceMap = () => {
       'id': 'geofences-line',
       'type': 'line',
       'paint': {
-         'line-color': '#25ABFF',
+         'line-color': '#3bb2d0',
          'line-width': 2,
       },
     });
     map.addLayer({
-      'source': "geofences",
+      'source': id,
       'id': 'geofences-title',
       'type': 'symbol',
       'layout': {
@@ -67,7 +61,6 @@ const GeofenceMap = () => {
         'text-halo-width': 1,
       },
     });
-  
 
     return () => {
       map.removeLayer('geofences-fill');
@@ -80,9 +73,9 @@ const GeofenceMap = () => {
   useEffect(() => {
     map.getSource(id).setData({
       type: 'FeatureCollection',
-      features: geofences.map(geofenceToFeature)
+      features: (props.geofences).map(geofenceToFeature)
     });
-  }, [geofences]);
+  }, [props.geofences]);
 
   return null;
 }

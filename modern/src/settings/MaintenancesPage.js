@@ -55,8 +55,8 @@ const MaintenancesView = ({ updateTimestamp, onMenuClick }) => {
           <TableCell className={classes.columnAction} />
           <TableCell>{t('sharedName')}</TableCell>
           <TableCell>{t('sharedType')}</TableCell>
-          <TableCell>{t('maintenanceStart')}</TableCell>
-          <TableCell>{t('maintenancePeriod')}</TableCell>
+          <TableCell>Debut Maintenance en Km</TableCell>
+          <TableCell>Periode Maintenance en Km</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

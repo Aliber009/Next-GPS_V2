@@ -9,7 +9,7 @@ id = '1111'
 server = 'localhost:5055'
 period = 1
 step = 0.001
-device_speed = 40
+device_speed = 400
 driver_id = '123456'
 
 waypoints = [
@@ -18,6 +18,7 @@ waypoints = [
     (48.857238, 2.347153),
     (48.858509, 2.342563),
     (48.856066, 2.340432),
+    (34.023943, -5.0717805),
     (48.854780, 2.342230)
 ]
 
@@ -49,6 +50,7 @@ def send(conn, lat, lon, course, speed, alarm, ignition, accuracy, rpm, fuel, dr
         params = params + (('fuel', fuel),)
     if driverUniqueId:
         params = params + (('driverUniqueId', driverUniqueId),)
+
     conn.request('GET', '?' + urllib.parse.urlencode(params))
     conn.getresponse().read()
 
