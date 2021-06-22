@@ -72,13 +72,13 @@ const SummaryReportPage = () => {
     field: 'averageSpeed',
     type: 'number',
     flex: 1,
-    valueFormatter: ({ value }) => formatSpeed(value, speedUnit),
+    valueFormatter: ({ value }) => value.toFixed(2)+' Km',
   }, {
     headerName: t('reportMaximumSpeed'),
     field: 'maxSpeed',
     type: 'number',
     flex: 1,
-    valueFormatter: ({ value }) => formatSpeed(value, speedUnit),
+    valueFormatter: ({ value }) => value.toFixed(2)+' Km',
   }, {
     headerName: t('reportEngineHours'),
     field: 'engineHours',

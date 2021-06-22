@@ -17,6 +17,7 @@ const GeofenceMap = (props) => {
   }, []); */
 
   useEffect(() => {
+    if (!map.getSource(id)) {
     map.addSource(id, {
       'type': 'geojson',
       'data': {
@@ -24,6 +25,7 @@ const GeofenceMap = (props) => {
         features: []
       }
     });
+  }
     map.addLayer({
       'source': id,
       'id': 'geofences-fill',

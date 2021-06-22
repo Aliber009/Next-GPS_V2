@@ -172,7 +172,8 @@ var n=new Map();
    // the data name is saved with id and Name as a map
   useEffect(() => {
     map.addControl(drawBar, 'top-left');
-    map.addControl(directions,'bottom-left');
+    //map.addControl(directions,'bottom-right');
+    console.log(directions.getDestination())
     return () => map.removeControl(drawBar);
   }, []);
    

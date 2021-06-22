@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+const { REACT_APP_FLASK } = process.env
 
 export default function Notif() {
 
@@ -25,20 +26,20 @@ export default function Notif() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
-    useEffectAsync(async () => {
-        const res= await fetch('http://127.0.0.1:5000/mission_users',{method:'GET'})
-        if(res.ok){
-        const json= await res.json();
-        for (var i=0;i<json.length;i++){
-         
-          if(json[i].nameUser==actualUser.name){
-            setOpen(true);
-            break
-          }
+  useEffectAsync(async () => {
+    const res = await fetch(REACT_APP_FLASK + '/mission_users', { method: 'GET' })
+    if (res.ok) {
+      const json = await res.json();
+      for (var i = 0; i < json.length; i++) {
+
+        if (json[i].nameUser == actualUser.name) {
+          setOpen(true);
+          break
         }
-          
-         }
-     }, []);
+      }
+
+    }
+  }, []);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

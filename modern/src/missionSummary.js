@@ -17,72 +17,73 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(name, Mission, Accomplie ) {
+function createData(name, Mission, Accomplie) {
   return { name, Mission, Accomplie };
 }
 
-
+const { REACT_APP_FLASK } = process.env
+console.log(REACT_APP_FLASK)
 
 export default function BasicTable() {
 
-  const[ mission ,setmission]=useState([])
-  const[missionUser,setmissionUser]=useState([])
+  const [mission, setmission] = useState([])
+  const [missionUser, setmissionUser] = useState([])
 
   useEffectAsync(async () => {
-    
-    const resUser = await fetch('http://127.0.0.1:5000/mission_users',{method:'GET'})
-    if(resUser.ok){
-    const jsonUser = await resUser.json();
-    setmissionUser(jsonUser);
+    console.log(REACT_APP_FLASK)
+    const resUser = await fetch('http://127.0.0.1:5000/mission_users', { method: 'GET' })
+    if (resUser.ok) {
+      const jsonUser = await resUser.json();
+      setmissionUser(jsonUser);
     }
 
-    const res= await fetch('http://127.0.0.1:5000/missions',{method:'GET'})
-    if(res.ok){
-    const json= await res.json();
-    setmission(json)
-     }   
- }, []);
+    const res = await fetch('http://127.0.0.1:5000/missions', { method: 'GET' })
+    if (res.ok) {
+      const json = await res.json();
+      setmission(json)
+    }
+  }, []);
 
- function x(index){
-  var x="";
-  mission.forEach(i=>{if(i.id==missionUser[index].missionID){x=i.Description}})
-  return x
-  
-}
+  function x(index) {
+    var x = "";
+    mission.forEach(i => { if (i.id == missionUser[index].missionID) { x = i.Description } })
+    return x
+
+  }
 
   const classes = useStyles();
 
   return (
-      <>
-    <MainToolbar />
-    <div style={{ marginTop:30, marginInline:20}}>
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Nom utilisateur</TableCell>
-            <TableCell align="right">Mission</TableCell>
-            <TableCell align="right">Accomplie</TableCell>
-            <TableCell align="right">Date Debut</TableCell>
-            <TableCell align="right">Date Fin</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {missionUser.map((row,index) => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.nameUser}
-              </TableCell>
-              <TableCell align="right">{x(index)}</TableCell>
-              <TableCell align="right">{(row.notified).toString()}</TableCell>
-              <TableCell align="right">{row.startDate}</TableCell>
-              <TableCell align="right">{row.endDate}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    </div>
+    <>
+      <MainToolbar />
+      <div style={{ marginTop: 30, marginInline: 20 }}>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Nom utilisateur</TableCell>
+                <TableCell align="right">Mission</TableCell>
+                <TableCell align="right">Accomplie</TableCell>
+                <TableCell align="right">Date Debut</TableCell>
+                <TableCell align="right">Date Fin</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {missionUser.map((row, index) => (
+                <TableRow key={row.name}>
+                  <TableCell component="th" scope="row">
+                    {row.nameUser}
+                  </TableCell>
+                  <TableCell align="right">{x(index)}</TableCell>
+                  <TableCell align="right">{(row.notified).toString()}</TableCell>
+                  <TableCell align="right">{row.startDate}</TableCell>
+                  <TableCell align="right">{row.endDate}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </>
   );
 }

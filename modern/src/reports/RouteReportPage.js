@@ -55,7 +55,7 @@ const RouteReportPage = () => {
     field: 'speed',
     type: 'number',
     flex: 1,
-    valueFormatter: ({ value }) => formatSpeed(value, speedUnit),
+    valueFormatter: ({ value }) => value+" KM",
   }, {
     headerName: t('positionAddress'),
     field: 'address',

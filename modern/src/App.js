@@ -33,6 +33,9 @@ import missionPage from './missionsPage'
 import Mission from './mission'
 import BasicTable from './missionSummary'
 import CachingController from './CachingController';
+import Parc from './parc'
+import CardChart from './chartParc';
+import Cost from './Cost';
 
 const App = () => {
   const initialized = useSelector(state => !!state.session.server && !!state.session.user);
@@ -74,6 +77,9 @@ const App = () => {
               <Route exact path='/reports/missions' component={missionPage} />
               <Route exact path='/reports/mission' component={Mission} />
               <Route exact path='/reports/missionSummary' component={BasicTable} />
+              <Route exact path='/settings/parc' component={Parc} />
+              <Route exact path='/settings/parc/auto' component={CardChart} />
+              <Route exact path='/cout/:id?' component={Cost} />
             </Switch>
           )}
         </Route>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import MainToolbar from './MainToolbar';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
@@ -8,17 +8,13 @@ import FormControl from '@material-ui/core/FormControl';
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SelectField from './form/SelectField';
-
-import clsx from 'clsx';
 import { useTheme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -31,19 +27,17 @@ const MenuProps = {
   },
 };
 
-/* const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
+const names = [
+  'Carburant',
+  'Réparation ',
+  'Visite technique',
+  'Parking',
+  'Assurance',
+  'Impot',
+  'Frais autoroute',
+  'Maintenance',
+  'Infraction routiere'
 ];
- */
 const { REACT_APP_FLASK } = process.env
 
 function getStyles(name, personName, theme) {
@@ -88,27 +82,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Mission = () => {
+const Cost = () => {
   const history = useHistory();
+  const location = useLocation()
   const classes = useStyles();
-  const [txt1, settxt1] = useState('')
-  const [txt2, settxt2] = useState('')
-  const [names, setnames] = useState([]);
 
-  useEffect(() => {
-    fetch('api/users', { method: 'GET' })
-      .then(response => response.json())
-      .then(data => setnames(() => { const l = []; data.forEach(i => l.push(i.name)); return l }));
+  const [somme, setsomme] = useState(0)
+  const [type, setype] = useState("")
 
 
-  }, [])
 
 
   //this is for the form select 
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
+  const url = history.location.pathname;
+  const idList = url.split('/')
+  const id = idList[idList.length - 1]
+
 
   const handleChange = (event) => {
+    setype(event.target.value)
     setPersonName(event.target.value);
   };
 
@@ -124,34 +118,22 @@ const Mission = () => {
   };
 
   //end of select 
-
-  const [missionId, setmissionId] = useState(0)
-  async function handlesave() {
-    var id = 0
+  function saveCost() {
     const ops = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
         {
-          "name": txt1,
-          "Description": txt2
+          "type": type,
+          "DeviceID": id,
+          "Somme": somme
         })
     }
-    if (txt1 != '' && txt2 != '') {
-      const res = await fetch(REACT_APP_FLASK + '/missions', ops)
-      const ids = await res.json()
-      id = parseInt(ids.mission_id);
-
-      /*  .then(data => id = parseInt(data.mission_id))
-        */
-    }
-    personName.forEach(item => fetch(REACT_APP_FLASK + '/mission_users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ "nameUser": item, "missionID": id })
-    }).then(response => response.json()).then(() => history.push('/reports/missions')))
+    fetch(REACT_APP_FLASK + '/costs', ops)
+      .then(response => response.json())
 
   }
+
 
 
 
@@ -163,29 +145,16 @@ const Mission = () => {
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
 
             <Typography variant='button'>
-              Ajouter une mission
+              Ajouter une Facture
             </Typography>
           </AccordionSummary>
           <AccordionDetails className={classes.details}>
-            <TextField
-              margin="normal"
-              value={txt1}
-              onChange={event => settxt1(event.target.value)}
-              label="Enter name of mission"
-              variant="filled" />
-
-            <TextField
-              margin="normal"
-              value={txt2}
-              onChange={event => settxt2(event.target.value)}
-              label="Enter Description"
-              variant="filled" />
             <FormControl className={classes.formControl}>
-              <InputLabel id="demo-mutiple-name-label">Envoyer la mission à</InputLabel>
+              <InputLabel id="demo-mutiple-name-label">Entrer type de Facture</InputLabel>
               <Select
                 labelId="demo-mutiple-name-label"
                 id="demo-mutiple-name"
-                multiple
+
                 value={personName}
                 onChange={handleChange}
                 input={<Input />}
@@ -198,14 +167,23 @@ const Mission = () => {
                 ))}
               </Select>
             </FormControl>
+
+
+            <TextField
+              margin="normal"
+              value={somme}
+              onChange={event => setsomme(event.target.value)}
+              label="Enter Somme Facture"
+              variant="filled" />
+
           </AccordionDetails>
         </Accordion>
         <FormControl fullWidth margin='normal'>
           <div className={classes.buttons}>
-            <Button type='button' color='primary' variant='outlined' onClick={() => history.push('/reports/missions')}>
+            <Button type='button' color='primary' variant='outlined' onClick={() => history.push('/')}>
               Annuler
             </Button>
-            <Button type='button' color='primary' variant='contained' onClick={() => handlesave()}>
+            <Button type='button' color='primary' variant='contained' onClick={() => { if (type.length > 2 && somme != 0) { saveCost(); history.goBack() } }}>
               Enregistrer
             </Button>
           </div>
@@ -215,4 +193,4 @@ const Mission = () => {
       </Container>
     </>)
 }
-export default Mission
+export default Cost

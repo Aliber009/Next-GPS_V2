@@ -51,13 +51,60 @@ const PositionsMap = ({ positions }) => {
   }, [history]);
 
   useEffect(() => {
+    if (!map.getSource(id)){
     map.addSource(id, {
       'type': 'geojson',
       'data': {
         type: 'FeatureCollection',
         features: [],
-      }
+      },
+      'cluster': true,
+      'clusterMaxZoom': 14, // Max zoom to cluster points on
+      'clusterRadius': 50 
     });
+  }
+    var layers = [
+      [20, '#f28cb1'],
+      [10, '#f1f075'],
+      [0, '#51bbd6']
+  ];
+  
+  
+    layers.forEach(function (layer, i) {
+      map.addLayer({
+          "id": "cluster-" + i,
+          "type": "circle",
+          "source": id,
+          "paint": {
+              "circle-color": layer[1],
+              "circle-radius": 18
+          },
+          
+          "filter": i === 0 ?
+              [">=", "point_count", layer[0]] :
+              ["all",
+                  [">=", "point_count", layer[0]],
+                  ["<", "point_count", layers[i - 1][0]]]
+      });
+      
+  });
+ 
+  map.addLayer({
+    'source': id,
+    'id': 'cluster-count',
+    'type': 'symbol',
+    
+    'layout': {
+      'text-field': '{point_count}',
+      'text-font': ['Roboto Regular'],
+      'text-size': 16,
+    },
+    'paint': {
+      'text-color': "#FFFFFF"
+    },
+  });
+        
+    
     map.addLayer({
       'id': id,
       'type': 'symbol',
@@ -72,11 +119,26 @@ const PositionsMap = ({ positions }) => {
         'text-font': ['Roboto Regular'],
         'text-size': 12,
       },
+      
       'paint': {
         'text-halo-color': 'white',
         'text-halo-width': 1,
       },
     });
+    
+       
+    /*   map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: id,
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+      'circle-color': '#11b4da',
+      'circle-radius': 4,
+      'circle-stroke-width': 1,
+      'circle-stroke-color': '#fff'
+      }
+      }); */
 
     map.on('mouseenter', id, onMouseEnter);
     map.on('mouseleave', id, onMouseLeave);
@@ -89,12 +151,17 @@ const PositionsMap = ({ positions }) => {
       map.off('mouseleave', id, onMouseLeave);
       map.off('click', id, onClickCallback);
 
+
+      //map.removeLayer("clusters");
+      //map.removeLayer("cluster-count");
+      //map.removeLayer("unclustered-point");
       map.removeLayer(id);
       map.removeSource(id);
     };
   }, [onClickCallback]);
 
   useEffect(() => {
+    
     map.getSource(id).setData({
       type: 'FeatureCollection',
       features: positions.map(position => ({

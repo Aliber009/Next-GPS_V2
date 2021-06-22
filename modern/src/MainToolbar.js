@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,6 +40,14 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useEffectAsync } from './reactHelper';
+import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import Collapse from '@material-ui/core/Collapse';
+import EcoIcon from '@material-ui/icons/Eco';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
 
 
 
@@ -54,13 +62,16 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
   title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
   },
-  
+
   sectionDesktop: {
     display: 'none',
     [theme.breakpoints.up('md')]: {
@@ -83,21 +94,22 @@ const MainToolbar = () => {
   const adminEnabled = useSelector(state => state.session.user && state.session.user.administrator);
   const ActualUser = useSelector(state => state.session.user)
   const userId = useSelector(state => state.session.user && state.session.user.id);
-  const [notifCount,setnotifCount] = useState(0)
+  const [notifCount, setnotifCount] = useState(0)
 
+  const [openParc, setOpenParc] = useState(true);
 
-  
+  const { REACT_APP_FLASK } = process.env
+
   useEffectAsync(async () => {
-    var miss=[]
-    const resUser = await fetch('http://127.0.0.1:5000/mission_users',{method:'GET'})
-    if(resUser.ok)
-    {
-    const jsonUser = await resUser.json();
-    miss=jsonUser.filter(i=>i.nameUser==ActualUser.name)
-    
+    var miss = []
+    const resUser = await fetch(REACT_APP_FLASK + '/mission_users', { method: 'GET' })
+    if (resUser.ok) {
+      const jsonUser = await resUser.json();
+      miss = jsonUser.filter(i => i.nameUser == ActualUser.name)
+
     }
     setnotifCount(miss.length)
-  },[]);
+  }, []);
 
 
 
@@ -105,6 +117,7 @@ const MainToolbar = () => {
 
   const openDrawer = () => { setDrawer(true) }
   const closeDrawer = () => { setDrawer(false) }
+  const OpenCloseParc = () => { setOpenParc(!openParc) };
 
   const handleLogout = async () => {
     const response = await fetch('/api/session', { method: 'DELETE' });
@@ -113,11 +126,11 @@ const MainToolbar = () => {
       history.push('/login');
     }
   }
- 
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-  const isMenuOpen = Boolean(anchorEl);
+
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -128,31 +141,13 @@ const MainToolbar = () => {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
+
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
@@ -164,8 +159,8 @@ const MainToolbar = () => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      
-      <MenuItem onClick={()=>history.push('/reports/missions')}>
+
+      <MenuItem onClick={() => history.push('/reports/missions')}>
         <IconButton aria-label="show notifications" color="inherit" >
           <Badge badgeContent={notifCount} color="secondary">
             <NotificationsIcon />
@@ -187,27 +182,27 @@ const MainToolbar = () => {
     </Menu>
   );
 
-  
+
 
 
   return (
     <>
-      
-      <AppBar style={{backgroundColor:"#c64756"}} position="static">
+
+      <AppBar style={{ backgroundColor: "#c64756" }} position="static">
         <Toolbar>
           <IconButton
-           className={classes.menuButton}
-           color="inherit"
-           onClick={openDrawer}>
-           <MenuIcon />
+            className={classes.menuButton}
+            color="inherit"
+            onClick={openDrawer}>
+            <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
             N E X T R A C K E R
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-      
-            <IconButton aria-label="show notifications" color="inherit" onClick={()=>history.push('/reports/missions')}>
+
+            <IconButton aria-label="show notifications" color="inherit" onClick={() => history.push('/reports/missions')}>
               <Badge badgeContent={notifCount} color="primary">
                 <NotificationsIcon />
               </Badge>
@@ -217,7 +212,8 @@ const MainToolbar = () => {
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              disabled={!userId}
+              onClick={() => history.push(`/user/${userId}`)}
               color="inherit"
             >
               <AccountCircle />
@@ -234,17 +230,17 @@ const MainToolbar = () => {
               <MoreIcon />
             </IconButton>
           </div>
-          <Button  style={{marginLeft:30}} color="inherit" onClick={handleLogout}>DECONNEXION</Button>
+          <Button style={{ marginLeft: 30 }} color="inherit" onClick={handleLogout}>DECONNEXION</Button>
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
+
       <Drawer open={drawer} onClose={closeDrawer}>
         <div
           tabIndex={0}
           className={classes.list}
           role="button"
-          onClick={closeDrawer}
+          /* onClick={closeDrawer} */
           onKeyDown={closeDrawer}>
           <List>
             <ListItem button onClick={() => history.push('/')}>
@@ -347,7 +343,32 @@ const MainToolbar = () => {
               </ListItemIcon>
               <ListItemText primary={t('sharedMaintenance')} />
             </ListItem>
-             {/*
+            <ListItem button onClick={OpenCloseParc}>
+              <ListItemIcon>
+                <DriveEtaIcon />
+              </ListItemIcon>
+              <ListItemText primary="Parc Auto" />
+              {openParc ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={openParc} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested} onClick={() => history.push('/settings/parc/auto')}>
+                  <ListItemIcon>
+                    <AccountBalanceWalletIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Gestion des couts" />
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <EcoIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Eco-Conduite" />
+                </ListItem>
+              </List>
+            </Collapse>
+
+
+            {/*
             <ListItem button onClick={() => history.push('/settings/maintenances')}>
               <ListItemIcon>
                 <BuildIcon />

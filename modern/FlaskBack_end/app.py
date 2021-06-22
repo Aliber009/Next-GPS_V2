@@ -31,6 +31,79 @@ def __init__(self, name, Description, Accomplie):
 
 def __repr__(self):
     return f"<mission {self.name}>"
+    # end  of class missions
+
+    # Class of costs
+
+
+class costs(db.Model):
+
+    id = db.Column('costs_id', db.Integer, primary_key=True)
+    type = db.Column(db.String(100))
+    Somme = db.Column(db.Integer)
+    DeviceID = db.Column(db.Integer)
+    Date = db.Column(db.DateTime)
+
+
+def __init__(self, type, Somme, Date, DeviceID):
+    self.type = type
+    self.Somme = Somme
+    self.Date = Date
+    self.DeviceID = DeviceID
+
+
+def __repr__(self):
+    return f"<costs {self.type}>"
+
+
+@app.route('/costs', methods=['POST', 'GET'])
+def handle_Costs():
+    if request.method == 'POST':
+        if request.is_json:
+            data = request.get_json()
+            new_Cost = costs(
+                type=data['type'], Somme=data['Somme'], Date=datetime.now(), DeviceID=data['DeviceID'])
+            db.session.add(new_Cost)
+            db.session.commit()
+            return {"message": f"cost {new_Cost.type} has been created successfully."}
+        else:
+            return {"error": "The request payload is not in JSON format"}
+
+    elif request.method == 'GET':
+        Costs = costs.query.all()
+        results = [
+            {
+                "id": Cost.id,
+                "type": Cost.type,
+                "Somme": Cost.Somme,
+                "Date": Cost.Date,
+                "DeviceID": Cost.DeviceID
+
+            } for Cost in Costs]
+        return jsonify(results)
+
+
+@app.route('/costs/<costs_id>', methods=['PUT', 'DELETE'])
+def handle_costs_user(costs_id):
+    cost_user = costs.query.get_or_404(costs_id)
+    if request.method == 'PUT':
+        data = request.get_json()
+        cost_user.type = data['type']
+        cost_user.Somme = data['Somme']
+        cost_user.Date = datetime.now()
+        # cost_user.DeviceID=data['DeviceID']
+        #mission_user.missionID = data['missionID']
+
+        db.session.add(cost_user)
+        db.session.commit()
+        return {"message": f"cost_user {cost_user.type} successfully updated"}
+
+    elif request.method == 'DELETE':
+        db.session.delete(cost_user)
+        db.session.commit()
+        return {"message": f"cost_user {cost_user} successfully deleted."}
+
+   # End of class costs
 
 
 class mission_users(db.Model):
