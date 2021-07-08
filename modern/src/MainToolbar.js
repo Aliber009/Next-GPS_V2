@@ -33,7 +33,6 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import BuildIcon from '@material-ui/icons/Build';
 import t from './common/localization';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -48,7 +47,7 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
-
+import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
 
 
 
@@ -70,6 +69,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+    color:"#FFF"
   },
 
   sectionDesktop: {
@@ -102,7 +102,7 @@ const MainToolbar = () => {
 
   useEffectAsync(async () => {
     var miss = []
-    const resUser = await fetch(REACT_APP_FLASK + '/mission_users', { method: 'GET' })
+    const resUser = await fetch(REACT_APP_FLASK+'/mission_users', { method: 'GET' })
     if (resUser.ok) {
       const jsonUser = await resUser.json();
       miss = jsonUser.filter(i => i.nameUser == ActualUser.name)
@@ -330,6 +330,12 @@ const MainToolbar = () => {
                 <PersonIcon />
               </ListItemIcon>
               <ListItemText primary={t('sharedDrivers')} />
+            </ListItem>
+            <ListItem button onClick={() => history.push('/settings/SummarySeq')}>
+              <ListItemIcon>
+                <LinkOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Numéro Séquentiel'} />
             </ListItem>
             <ListItem button onClick={() => history.push('/reports/missions')}>
               <ListItemIcon>

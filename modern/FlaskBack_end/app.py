@@ -1,12 +1,18 @@
+
+
 from flask import Flask, request, jsonify
 import json
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS, cross_origin
 from datetime import datetime
+
 #from flask_classful import FlaskView, route
 
+
 app = Flask(__name__)
+
+
 CORS(app)
 # db should exist beforehand
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:jesuisber@localhost:5432/missionsDB'
@@ -14,7 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:jesuisbe
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-
+import conductor
 class missions(db.Model):
 
     id = db.Column('mission_id', db.Integer, primary_key=True)
@@ -33,11 +39,74 @@ def __repr__(self):
     return f"<mission {self.name}>"
     # end  of class missions
 
-    # Class of costs
+
+# class conductor
+
+# Class of refs
+
+
+class refs(db.Model):
+    id = db.Column('ref_id', db.Integer, primary_key=True)
+    ref = db.Column(db.String(100))
+    DeviceID = db.Column(db.Integer)
+
+
+def __init__(self, ref, DeviceID):
+    self.ref = ref
+    self.DeviceID = DeviceID
+
+
+def __repr__(self):
+    return f"<ref {self.ref}>"
+
+
+@app.route('/refs', methods=['POST', 'GET'])
+def handle_refs():
+    if request.method == 'POST':
+        if request.is_json:
+            data = request.get_json()
+            new_ref = refs(
+                ref=data['ref'], DeviceID=data['DeviceID'])
+            db.session.add(new_ref)
+            db.session.commit()
+            return {"message": f"cost {new_ref.ref} has been created successfully."}
+        else:
+            return {"error": "The request payload is not in JSON format"}
+
+    elif request.method == 'GET':
+        allrefs = refs.query.all()
+        results = [
+            {
+                "id": ref.id,
+                "DeviceID": ref.DeviceID
+
+            } for ref in allrefs]
+        return jsonify(results)
+
+
+@app.route('/refs/<refs_id>', methods=['PUT', 'DELETE'])
+def handle_refs_user(refs_id):
+    ref_user = refs.query.get_or_404(refs_id)
+    if request.method == 'PUT':
+        data = request.get_json()
+        ref_user.ref = data['ref']
+        ref_user.DeviceID = data['DeviceID']
+        #mission_user.missionID = data['missionID']
+
+        db.session.add(ref_user)
+        db.session.commit()
+        return {"message": f"cost_user {ref_user.ref} successfully updated"}
+
+    elif request.method == 'DELETE':
+        db.session.delete(ref_user)
+        db.session.commit()
+        return {"message": f"cost_user {ref_user} successfully deleted."}
+# end of class refs
+
+# class costs
 
 
 class costs(db.Model):
-
     id = db.Column('costs_id', db.Integer, primary_key=True)
     type = db.Column(db.String(100))
     Somme = db.Column(db.Integer)
@@ -104,6 +173,8 @@ def handle_costs_user(costs_id):
         return {"message": f"cost_user {cost_user} successfully deleted."}
 
    # End of class costs
+
+# start table missions
 
 
 class mission_users(db.Model):

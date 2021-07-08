@@ -35,6 +35,18 @@ function ParseJson(data){
 
 
 useEffect(() => {
+
+ fetch("http://api.carmd.com/v3.0/decode?vin=VNKKL3D330A261601",{
+  method: "GET",
+  headers: new Headers({
+  "content-type":"application/json",
+  "authorization":"Basic ZWQxMjE1OTMtZTAyYy00ZTE0LWE5NGYtOTFiNDYxNDY2NTQ2",
+  "partner-token":"ab78e34e671046d4b0f0f16ac14310be"
+  })})
+ .then(response=>response.json())
+ .then(response=> console.log(response))
+
+
     if (!map.getSource(id)) {
         map.addSource(id, {
           'type': 'geojson',
@@ -86,12 +98,9 @@ useEffectAsync(async() => {
     if (res.ok){
         const directs=await res.json()
         waypoints=directs.features[0].geometry
-        //console.log(directs.features[0].properties.summary.distance/1000+"KM")
-        //console.log(directs.features[0].properties.summary.duration/60)
         props.distance((directs.features[0].properties.summary.distance/1000).toFixed(2)+" KM")
         props.time((directs.features[0].properties.summary.duration/60).toFixed(2)+ " min")
-        //console.log(ParseJson(directs))
-        //console.log(waypoints)
+       
     }
     
    

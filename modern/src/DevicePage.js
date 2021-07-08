@@ -22,9 +22,12 @@ const DevicePage = () => {
   const classes = useStyles();
 
   const [item, setItem] = useState();
+  const [openthedial,setopenthedial] =useState(false)
+  
+  
 
   return (
-    <EditItemView endpoint="devices" item={item} setItem={setItem}>
+    <EditItemView endpoint="devices" item={item} setItem={setItem} opentheDial={openthedial}   >
       {item &&
         <>
           <Accordion defaultExpanded>
@@ -37,7 +40,7 @@ const DevicePage = () => {
               <TextField
                 margin="normal"
                 value={item.name || ''}
-                onChange={event => setItem({...item, name: event.target.value})}
+                onChange={(event) => setItem({...item, name: event.target.value})}
                 label={t('sharedName')}
                 variant="filled" />
               <TextField
@@ -46,6 +49,12 @@ const DevicePage = () => {
                 onChange={event => setItem({...item, uniqueId: event.target.value})}
                 label={t('deviceIdentifier')}
                 variant="filled" />
+                  {/* <TextField
+                margin="normal"
+                value={item.contact || ''}
+                onChange={()=> setItem({...item, contact:valueSeq.substring(2,valueSeq.length) })}
+                label={"№ Sequence "}
+                variant="filled" />  */}
             </AccordionDetails>
           </Accordion>
           <Accordion>
@@ -74,12 +83,7 @@ const DevicePage = () => {
                 onChange={event => setItem({...item, model: event.target.value})}
                 label={t('deviceModel')}
                 variant="filled" />
-              <TextField
-                margin="normal"
-                value={item.contact || ''}
-                onChange={event => setItem({...item, contact: event.target.value})}
-                label={t('deviceContact')}
-                variant="filled" />
+             
               <SelectField
                 margin="normal"
                 value={item.category || 'default'}
@@ -145,6 +149,19 @@ const DevicePage = () => {
                   keyBase="deviceId"
                   keyLink="driverId"
                   label={t('sharedDrivers')}
+                  
+                  variant="filled" />
+                  <LinkField
+                  margin="normal"
+                  endpointAll="/api/drivers"
+                  endpointLinked={"/api/drivers?deviceId=" + item.id}
+                  baseId={item.id}
+                  keyBase="deviceId"
+                  keyLink="driverId"
+                  label={"Numéro de Séquence"}
+                  opendialogue={()=>setopenthedial(true)}
+                 
+                  //save={data}
                   variant="filled" />
                 <LinkField
                   margin="normal"

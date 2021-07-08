@@ -36,6 +36,9 @@ import CachingController from './CachingController';
 import Parc from './parc'
 import CardChart from './chartParc';
 import Cost from './Cost';
+import Seq from './settings/seq'
+import SummarySeq from './settings/summarySeq'
+import CheckboxSelectionGrid from './checkSelection';
 
 const App = () => {
   const initialized = useSelector(state => !!state.session.server && !!state.session.user);
@@ -61,6 +64,8 @@ const App = () => {
               <Route exact path='/settings/group/:id?' component={GroupPage} />
               <Route exact path='/settings/drivers' component={DriversPage} />
               <Route exact path='/settings/driver/:id?' component={DriverPage} />
+              <Route exact path='/settings/Seq/:id?' component={Seq} />
+              <Route exact path='/settings/SummarySeq' component={SummarySeq} />
               <Route exact path='/settings/attributes' component={ComputedAttributesPage} />
               <Route exact path='/settings/attribute/:id?' component={ComputedAttributePage} />
               <Route exact path='/settings/maintenances' component={MaintenancesPage} />
@@ -80,6 +85,8 @@ const App = () => {
               <Route exact path='/settings/parc' component={Parc} />
               <Route exact path='/settings/parc/auto' component={CardChart} />
               <Route exact path='/cout/:id?' component={Cost} />
+              <Route exact path='/checkSelection' component={CheckboxSelectionGrid} />
+
             </Switch>
           )}
         </Route>

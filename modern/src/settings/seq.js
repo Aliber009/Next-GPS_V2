@@ -5,12 +5,8 @@ import EditItemView from '../EditItemView';
 import { Accordion, AccordionSummary, AccordionDetails, makeStyles, Typography } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditAttributesView from '../attributes/EditAttributesView';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
 import { useEffectAsync } from '../reactHelper';
+import { useParams } from 'react-router';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,26 +22,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DriverPage = () => {
+const Seq = () => {
   const classes = useStyles();
   const [seq, setseq] = useState([]);
   const [ref,setref] = useState('')
-
+  const {id} =useParams()
+  const [driver,setdriver] =useState({})
+  
   const handleChange = (event) => {
     setref(event.target.value);
   };
-  const [item, setItem] = useState();
-  useEffectAsync(async () => {
-    const response = await fetch('/api/devices');
-    if (response.ok) {
-      const devices= await response.json();
-      setseq(()=>{var l=[]; devices.forEach(i=>l.push(i.contact));return l})
+  const [item, setItem] = useState({name:"",driverId:"",attributes:{}});
+  var m={...item,name:'S*'+item.name}
+
+
+  
+  const changeContact=async(driverId)=>{
+    var device={}
+    const respo=await fetch('/api/devices?driverId='+driverId)
+    if(respo.ok)
+    {
+      const res=await respo.json()
+      
+      device=res[0]
     }
-  }, []);
+
+  }
+
+
+
+
+
      
 
   return (
-    <EditItemView endpoint="drivers" item={item} setItem={setItem}>
+    <>
+    <EditItemView endpoint="drivers" item={m} setItem={setItem}  >
       {item &&
         <>
           <Accordion defaultExpanded>
@@ -57,32 +69,17 @@ const DriverPage = () => {
             <AccordionDetails className={classes.details}>
               <TextField
                 margin="normal"
-                value={item.name || ''}
-                onChange={event => setItem({...item, name: event.target.value})}
-                label={t('sharedName')}
+                //value={item.name || ''}
+                onChange={event => { setItem({...item, name:event.target.value}) ; changeContact(item.id) }}
+                label={"№ Sequentiel"}
                 variant="filled" />
               <TextField
                 margin="normal"
                 value={item.uniqueId || ''}
                 onChange={event => setItem({...item, uniqueId: event.target.value})}
-                label={"Identifiant vehicule"}
+                label={"Code"}
                 variant="filled" />
-                {/* <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="demo-simple-select-outlined-label">№ Sequenciel</InputLabel>
-        <Select
-          labelId="demo-simple-select-outlined-label"
-          id="demo-simple-select-outlined"
-          value={ref}
-          onChange={handleChange}
-          label="№ Sequenciel"
-        >
-          {seq.map((name) => (
-                  <MenuItem key={name} value={name} >
-                    {name}
-                  </MenuItem>
-                ))}
-        </Select>
-      </FormControl>  */}             
+                   
             </AccordionDetails>
           </Accordion>
            <Accordion>
@@ -102,7 +99,9 @@ const DriverPage = () => {
         </>
       }
     </EditItemView>
+    
+    </>
   );
 }
 
-export default DriverPage;
+export default Seq;

@@ -22,7 +22,7 @@ function createData(name, Mission, Accomplie) {
 }
 
 const { REACT_APP_FLASK } = process.env
-console.log(REACT_APP_FLASK)
+
 
 export default function BasicTable() {
 
@@ -30,14 +30,14 @@ export default function BasicTable() {
   const [missionUser, setmissionUser] = useState([])
 
   useEffectAsync(async () => {
-    console.log(REACT_APP_FLASK)
-    const resUser = await fetch('http://127.0.0.1:5000/mission_users', { method: 'GET' })
+    
+    const resUser = await fetch(REACT_APP_FLASK+'/mission_users', { method: 'GET' })
     if (resUser.ok) {
       const jsonUser = await resUser.json();
       setmissionUser(jsonUser);
     }
 
-    const res = await fetch('http://127.0.0.1:5000/missions', { method: 'GET' })
+    const res = await fetch(REACT_APP_FLASK+'/missions', { method: 'GET' })
     if (res.ok) {
       const json = await res.json();
       setmission(json)

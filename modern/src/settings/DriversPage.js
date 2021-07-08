@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MainToolbar from '../MainToolbar';
 import { TableContainer, Table, TableRow, TableCell, TableHead, TableBody, makeStyles, IconButton } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -15,9 +15,10 @@ const useStyles = makeStyles(theme => ({
 
 const DriversView = ({ updateTimestamp, onMenuClick }) => {
   const classes = useStyles();
-
+  
   const [items, setItems] = useState([]);
 
+  
   useEffectAsync(async () => {
     const response = await fetch('/api/drivers');
     if (response.ok) {
@@ -29,17 +30,19 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
     <TableContainer>
     <Table>
       <TableHead>
+
         <TableRow>
           <TableCell className={classes.columnAction} />
           <TableCell>{t('sharedName')}</TableCell>
-          <TableCell>CIN</TableCell>
-          <TableCell>Matricule</TableCell>
-          <TableCell>Telephone</TableCell>
-          
+          <TableCell>Identifiant</TableCell>
+          <TableCell>Attributs</TableCell>
         </TableRow>
+
       </TableHead>
       <TableBody>
-        {items.map((item) => (
+        {items.map((item) => 
+        <>
+        {item.name.substring(0,2)!="S*" &&
           <TableRow key={item.id}>
             <TableCell className={classes.columnAction} padding="none">
               <IconButton onClick={(event) => onMenuClick(event.currentTarget, item.id)}>
@@ -48,8 +51,11 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
             </TableCell>
             <TableCell>{item.name}</TableCell>
             <TableCell>{item.uniqueId}</TableCell>
+            <TableCell></TableCell>
           </TableRow>
-        ))}
+             }
+          </>
+        )}
       </TableBody>
     </Table>
     </TableContainer>

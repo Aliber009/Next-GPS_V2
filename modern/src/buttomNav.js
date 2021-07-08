@@ -13,6 +13,10 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import DevicesList from './DevicesList';
 import SimpleList from './listgeo';
+import Tree from './tree'
+import CreateNewFolderOutlinedIcon from '@material-ui/icons/CreateNewFolderOutlined';
+import LocationOffOutlinedIcon from '@material-ui/icons/LocationOffOutlined';
+import DevicesListgpsonly from './deviceGPSonly'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -21,12 +25,12 @@ function TabPanel(props) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
       {...other}
     >
       {value === index && (
-        <Box p={2}>
+        <Box p={3}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -42,17 +46,16 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
   return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
+    id: `scrollable-auto-tab-${index}`,
+    'aria-controls': `scrollable-auto-tabpanel-${index}`,
   };
 }
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    flexGrow: 1,
+    width: '100%',
     backgroundColor: theme.palette.background.paper,
-    //width: 500,
-     
-
   },
 }));
 
@@ -73,15 +76,22 @@ export default function FullWidthTabs() {
     <div className={classes.root}>
       <AppBar position="static" color="default">
         <Tabs
+        
           value={value}
           onChange={handleChange}
           indicatorColor="primary"
           textColor="primary"
-          variant="fullWidth"
-          aria-label="full width tabs example"
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          
         >
           <Tab icon={<RoomOutlinedIcon />} label="DEVICES" {...a11yProps(0)} />
-          <Tab icon={< ChangeHistoryOutlinedIcon />} label="GEOFENCES" {...a11yProps(1)} />
+          <Tab icon={<LocationOffOutlinedIcon />} label="Devices Sans N seq" {...a11yProps(1)} />
+          <Tab icon={< CreateNewFolderOutlinedIcon/>} label="GROUPES" {...a11yProps(2)} />
+          <Tab icon={< ChangeHistoryOutlinedIcon />} label="GEOFENCES" {...a11yProps(3)} />
+         
+          
           
         </Tabs>
       </AppBar>
@@ -94,6 +104,12 @@ export default function FullWidthTabs() {
         <DevicesList />
         </TabPanel>
         <TabPanel style={{ height:'80vh'}} value={value} index={1} dir={theme.direction}>
+          <DevicesListgpsonly/>
+        </TabPanel>
+        <TabPanel style={{ height:'80vh'}} value={value} index={2} dir={theme.direction}>
+          <Tree />
+        </TabPanel>
+        <TabPanel style={{ height:'80vh'}} value={value} index={3} dir={theme.direction}>
           <SimpleList />
         </TabPanel>
       </SwipeableViews>

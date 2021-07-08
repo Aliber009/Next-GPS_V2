@@ -263,9 +263,7 @@ var n=new Map();
       .then(response => response.json())  
   
   });
-  /* directions.on('route',function(e){
-    console.log(directions.getWaypoints())
-  }) */   
+    
   return(
     <>
     <GeofenceMap geofences={geofences} />

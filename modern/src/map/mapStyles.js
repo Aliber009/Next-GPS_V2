@@ -20,7 +20,7 @@
   
   export const styleOsm = () => styleCustom(
      "https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", 
-     //"https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?apiKey=KsZa4-TW7S9qjQKssnjgwAsx7XpkaOMrbJf0C4YWuhw",
+     //"https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?apiKey=dThtW9Vcohb8nFqAJkmjPEwWtsD1PlQZXbu5mqXAiFA",
     '© <a target="_top" rel="noopener" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   );
   

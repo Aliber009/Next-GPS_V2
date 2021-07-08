@@ -8,17 +8,12 @@ import FormControl from '@material-ui/core/FormControl';
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SelectField from './form/SelectField';
-
-import clsx from 'clsx';
 import { useTheme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

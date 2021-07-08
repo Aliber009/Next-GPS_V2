@@ -174,9 +174,9 @@ const cancelSearch = () => {
         
         <Fragment key={item.id}>
           
-         {xx[item.id] != undefined &&
+         {xx[item.id] == undefined  &&
           <>
-          {console.log(xx[item.id])}
+          
           <ListItem button key={item.id} onClick={() => dispatch(devicesActions.select(item))}>
             
             <ListItemAvatar>
@@ -198,7 +198,7 @@ const cancelSearch = () => {
             disabled
             style={{marginTop:"-20px"}}
             id="outlined-size-normal"
-            value={xx[item.id] || ''}
+            value={''}
             variant="outlined"
             size="small"
             label="№ sequentiel"
@@ -254,10 +254,10 @@ const cancelSearch = () => {
   );
 }
 
-const DevicesList = () => {
+const DevicesListgpsonly = () => {
   return (
     <EditCollectionView content={DeviceView} editPath="/device" endpoint="devices" />
   );
 }
 
-export default DevicesList;
+export default DevicesListgpsonly;
