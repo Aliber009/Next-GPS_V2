@@ -26,6 +26,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
 import SearchBar from "material-ui-search-bar";
 import { useState,useEffect } from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 
 
@@ -64,8 +66,8 @@ const DeviceView = ({ deviceId,updateTimestamp, onMenuClick }) => {
 
  
 
-
-
+const [laoding,setloading]=useState(false)
+  
  var mm={}
   const drivors = async (id) => {
     
@@ -123,6 +125,8 @@ const DeviceView = ({ deviceId,updateTimestamp, onMenuClick }) => {
 
   const [rows, setRows] = useState([]);
   const [constantItems,setconst] =useState([])
+  
+
   var M=new Map()
   const [xx,setxx]=useState({})
   useEffectAsync(async () => {
@@ -136,6 +140,7 @@ const DeviceView = ({ deviceId,updateTimestamp, onMenuClick }) => {
     for(var i=0;i<ro.length;i++){  
     x= await drivors(ro[i].id)
       }
+      setloading(true)
       setxx(x)
     }
   }, [updateTimestamp]);
@@ -169,6 +174,8 @@ const cancelSearch = () => {
     onChange={(searchVal) => requestSearch(searchVal)}
     onCancelSearch={() => cancelSearch()}
   />
+
+    {laoding ?(   
     <List className={classes.list} >
       {rows.map((item, index, list) => (
         
@@ -176,7 +183,7 @@ const cancelSearch = () => {
           
          {xx[item.id] != undefined &&
           <>
-          {console.log(xx[item.id])}
+          
           <ListItem button key={item.id} onClick={() => dispatch(devicesActions.select(item))}>
             
             <ListItemAvatar>
@@ -195,8 +202,8 @@ const cancelSearch = () => {
             
             </ListItem >
             <TextField
-            disabled
-            style={{marginTop:"-20px"}}
+            
+            style={{marginTop:"-20px", }}
             id="outlined-size-normal"
             value={xx[item.id] || ''}
             variant="outlined"
@@ -248,7 +255,8 @@ const cancelSearch = () => {
       
       ))}
     </List>
-    
+    ):(< CircularProgress style={{marginTop:"50px",marginLeft:"18vh"}} />)
+  }
     
     </div>
   );

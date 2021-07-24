@@ -3,15 +3,14 @@ from flask import Flask, request, jsonify
 import json
 
 
-class drivers(db.Model):
+class vehicles(db.Model):
 
     id = db.Column('driver_id', db.Integer, primary_key=True)
-    driverId = db.Column(db.Integer)
-    name = db.Column(db.String(100))
-    lastname = db.Column(db.String(100))
-    etat = db.Column(db.String(100))
-    Adresse = db.Column(db.String(300))
-    email = db.Column(db.String, unique=True, nullable=False)
+    deviceId = db.Column(db.Integer)
+    Marque = db.Column(db.String(100))
+    Modele = db.Column(db.String(100))
+    Typologie = db.Column(db.String(100))
+    immatriculation = db.Column(db.String, unique=True, nullable=False)
     ville = db.Column(db.String(100))
     phone = db.Column(db.String(500))
     pays = db.Column(db.String(100))

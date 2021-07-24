@@ -151,7 +151,17 @@ const checks=(name)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(
           {
-            ...driver,attributes:{...driver.attributes, destructions:[...driver.attributes.destructions || [],{ carId: itemDevice[0].name, removed:new Date().toLocaleDateString("fr-FR") } ] }
+            ...driver,attributes:{...driver.attributes, destructions:[...driver.attributes.destructions || [],{ carId: itemDevice[0].name, removed:new Date().toLocaleDateString("fr-FR",{year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"}) } ] }
+          })
+      })
+
+      await fetch('http://localhost:5000/lastdetach',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          {
+            Seqname:driver.name.substring(2),CarId:itemDevice[0].id,driverId:createBody(removed).driverId
+           // ...driver,attributes:{...driver.attributes, destructions:[...driver.attributes.destructions || [],{ carId: itemDevice[0].name, removed:new Date().toLocaleDateString("fr-FR",{year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"}) } ] }
           })
       })
    
@@ -174,6 +184,16 @@ const checks=(name)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(createBody(added)),
       });
+
+      await fetch('http://localhost:5000/histoconductor',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          {
+            driverId:createBody(added).driverId,added:true,removed:false,Date:new Date().toLocaleDateString,CarId:itemDevice[0].name
+          })
+      })
+       
       
     }
     for (const removed of oldValue.filter(it => !newValue.includes(it))) {
@@ -182,6 +202,15 @@ const checks=(name)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(createBody(removed)),
       });
+
+      await fetch('http://localhost:5000/histoconductor',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          {
+            driverId:createBody(removed).driverId,added:false,removed:true,Date:new Date().toLocaleDateString,CarId:itemDevice[0].name
+          })
+      })
       
     }
     setLinked(newValue);

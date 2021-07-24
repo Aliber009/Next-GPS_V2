@@ -6,12 +6,31 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
+const { REACT_APP_FLASK } = process.env
+
 const RemoveDialog = ({ open, endpoint, itemId, onResult }) => {
+
   const handleRemove = async () => {
+    if(endpoint=="drivers"){
+      const rem=await fetch(REACT_APP_FLASK+'/lastdetach')
+      if(rem.ok){
+        const remo=await rem.json();
+        console.log(remo)
+        remo.forEach(element => { if(element.driverId==itemId)
+          {
+             fetch(REACT_APP_FLASK+'/lastdetach/'+element.id,{method:'DELETE'})
+             
+          }
+          
+        });
+      }
+    }
+
     const response = await fetch(`/api/${endpoint}/${itemId}`, { method: 'DELETE' });
     if (response.ok) {
       onResult(true);
     }
+   
   };
 
   return (

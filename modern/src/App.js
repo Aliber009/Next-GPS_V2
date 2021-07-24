@@ -39,6 +39,8 @@ import Cost from './Cost';
 import Seq from './settings/seq'
 import SummarySeq from './settings/summarySeq'
 import CheckboxSelectionGrid from './checkSelection';
+import Checkout from './settings/driverFiche';
+import Image from './image';
 
 const App = () => {
   const initialized = useSelector(state => !!state.session.server && !!state.session.user);
@@ -86,6 +88,9 @@ const App = () => {
               <Route exact path='/settings/parc/auto' component={CardChart} />
               <Route exact path='/cout/:id?' component={Cost} />
               <Route exact path='/checkSelection' component={CheckboxSelectionGrid} />
+              <Route exact path='/settings/fiches/:id?' component={Checkout} />
+              <Route exact path='/image' component={Image} />
+
 
             </Switch>
           )}

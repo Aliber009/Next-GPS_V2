@@ -51,6 +51,20 @@ export default function VerticalLinearStepper(props) {
   function getSteps() {
     const titles=props.data;
     var headers=[]
+    if (props.source=="drivers"){
+
+      for(var i=0;i<titles.length;i++){
+        if(i%2==0)
+        {
+           headers.push("Affectation conducteur")
+        }
+        else
+        {
+            headers.push("Suppression d'affectation conducteur")
+        }
+     }
+    }
+    else{
     for(var i=0;i<titles.length;i++){
         if(i%2==0)
         {
@@ -61,6 +75,7 @@ export default function VerticalLinearStepper(props) {
             headers.push("Supression Numero Sequentiel")
         }
     }
+  }
          return headers
   }
   

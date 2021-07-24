@@ -2,23 +2,34 @@ import React, { useEffect, useState } from 'react';
 import MainToolbar from '../MainToolbar';
 import { TableContainer, Table, TableRow, TableCell, TableHead, TableBody, IconButton } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import t from '../common/localization';
 import { useEffectAsync } from '../reactHelper';
 import EditCollectionView from '../EditCollectionView';
 import Button from '@material-ui/core/Button';
-import TimelineIcon from '@material-ui/icons/Timeline';
 import HistoryOutlinedIcon from '@material-ui/icons/HistoryOutlined';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import HistoryDrawer from './Historydrawer'
 import VerticalLinearStepper from './historyStepper'
-import Seq from './seq'
+import GetAppOutlinedIcon from '@material-ui/icons/GetAppOutlined';
+import { CSVLink, CSVDownload } from "react-csv";
+import CSVReader from 'react-csv-reader'
+
+
+//import  IconButton  from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   columnAction: {
     width: theme.spacing(1),
     padding: theme.spacing(0, 1),
   },
+  fab: {
+    position: 'absolute',
+  
+     top: theme.spacing(11)+"%",
+    
+    right: theme.spacing(5)+"%", 
+  },
 }));
+
 
 // styling 
 const StyledTableCell = withStyles((theme) => ({
@@ -43,7 +54,7 @@ const StyledTableRow = withStyles((theme) => ({
 const DriversView = ({ updateTimestamp, onMenuClick }) => {
   const classes = useStyles();
   const [items, setItems] = useState([]);
-
+  
   const [historyopen,sethistoryopen] = useState(false)
   const [itemstepper,setitemstepper] = useState("")
   const toggleDrawer = (open) => (event) => {
@@ -70,29 +81,47 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
    var histocrea=[]
    var histodest=[]
    var histo=[]
+   var creaDataCSV=[]
+   var remoDataCSV=[]
+   var datacsv=[["Clé sequentiel","Attaché à", "supprimé de ","Date" ]]
    var k=0;
    var kk=0
    if(data){
     const attr=data.attributes
     if(attr.creations){
-       attr.creations.forEach(i=>histocrea.push("Sequence ajoutée à la voiture : "+i.carId+" le "+i.created ))
+       attr.creations.forEach(i=>{
+         histocrea.push("Sequence ajoutée à la voiture : "+i.carId+" le "+i.created )
+         creaDataCSV.push([data.name.substring(2),i.carId," ",i.created] )
+
+        
+        })
       }
     if(attr.destructions){
-      attr.destructions.forEach(i=>histodest.push("Sequence supprimée de la voiture : "+i.carId+" le "+i.removed ))
+      attr.destructions.forEach(i=>{
+        histodest.push("Sequence supprimée de la voiture : "+i.carId+" le "+i.removed )
+        remoDataCSV.push([data.name.substring(2)," ",i.carId ,i.removed] )
+      })
       }
    }
     
     for(var i=0;i<histocrea.length+histodest.length;i++){
-     if(i%2==0){histo.push(histocrea[k]);k++}
-     else if(i%2!=0){histo.push(histodest[kk]);kk++}
+     if(i%2==0){histo.push(histocrea[k]); datacsv.push(creaDataCSV[k]) ;k++}
+     else if(i%2!=0){histo.push(histodest[kk]);datacsv.push(remoDataCSV[kk]);kk++}
      
     }
     
    
-   return histo
+   return [histo,datacsv]
  }
 //end of function
 
+//import function 
+
+
+
+
+
+//
 
   return (
     <div
@@ -105,7 +134,8 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
           <StyledTableCell style={{backgroundColor:"#444444"}} className={classes.columnAction} />
           <StyledTableCell style={{backgroundColor:"#444444"}} >№ Sequentiels</StyledTableCell>
           <StyledTableCell style={{backgroundColor:"#444444"}} >Codes</StyledTableCell>
-           <StyledTableCell style={{backgroundColor:"#444444"}} >History</StyledTableCell>
+           <StyledTableCell style={{backgroundColor:"#444444"}} >Historique</StyledTableCell>
+           <StyledTableCell style={{backgroundColor:"#444444"}} >Export</StyledTableCell>
          {/* <TableCell>Telephone</TableCell> */} 
         </TableRow>
       </TableHead>
@@ -119,7 +149,7 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
                 <MoreVertIcon />
               </IconButton>
             </StyledTableCell>
-            <StyledTableCell>{item.name.substring(2,item.name.length)}</StyledTableCell>
+            <StyledTableCell>{item.name.substring(2)}</StyledTableCell>
             <StyledTableCell>{item.uniqueId}</StyledTableCell>
              <StyledTableCell >   
                <Button
@@ -131,8 +161,16 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
               >
               Voir Historique
                </Button>
-               </StyledTableCell> 
-               <HistoryDrawer open={historyopen} list={<VerticalLinearStepper  data={parseJsonHistory(itemstepper) || [] }  />} />
+               </StyledTableCell>
+               <StyledTableCell >  
+               <CSVLink  filename={"historique_"+item.name.substring(2)+".csv"} data={parseJsonHistory(itemstepper)[1] || []}>
+               <IconButton onClick={()=>{setitemstepper(item)}}>
+                  <GetAppOutlinedIcon />
+               </IconButton>
+               </CSVLink>
+               </StyledTableCell>  
+               
+               <HistoryDrawer open={historyopen} list={<VerticalLinearStepper  data={parseJsonHistory(itemstepper)[0] || [] }  />} />
           </StyledTableRow>
           } 
           </>
@@ -147,10 +185,31 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
 }
 
 const SummarySeq = () => {
+  const classes = useStyles();
+  const importCSV=async(data)=>{
+    for (var i=1;i<data.length;i++)
+    {
+      await fetch('api/drivers',{
+      method:"POST",
+      headers: { 'Content-Type': 'application/json' },
+      body:JSON.stringify({
+          name:"S"+data[i][0],
+          uniqueId:data[i][1],
+          attributes:{}
+        })
+      })
+    }
+  }
   return (
     <>
       <MainToolbar />
       <EditCollectionView content={DriversView} editPath="/settings/seq" endpoint="drivers" />
+      <Button className={classes.fab} variant="outlined" >
+      <div style={{ height: 'fit-content' ,position: "absolute" ,left: "0px",top: "0px" ,zIndex: 1,opacity:0}}>
+          <CSVReader  onFileLoaded={(data) => importCSV(data)} / >
+      </div>
+       Importer depuis fichier Excel
+     </Button>
       
       
     </>

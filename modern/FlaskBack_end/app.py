@@ -16,11 +16,26 @@ app = Flask(__name__)
 CORS(app)
 # db should exist beforehand
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:jesuisber@localhost:5432/missionsDB'
+UPLOAD_FOLDER = './uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+
 import conductor
+
+import LastDetach
+
+import historyConductor
+
+import testImages
+
+
+
+
+
 class missions(db.Model):
 
     id = db.Column('mission_id', db.Integer, primary_key=True)
@@ -161,17 +176,14 @@ def handle_costs_user(costs_id):
         cost_user.Somme = data['Somme']
         cost_user.Date = datetime.now()
         # cost_user.DeviceID=data['DeviceID']
-        #mission_user.missionID = data['missionID']
-
+        # mission_user.missionID = data['missionID']
         db.session.add(cost_user)
         db.session.commit()
         return {"message": f"cost_user {cost_user.type} successfully updated"}
-
     elif request.method == 'DELETE':
         db.session.delete(cost_user)
         db.session.commit()
         return {"message": f"cost_user {cost_user} successfully deleted."}
-
    # End of class costs
 
 # start table missions

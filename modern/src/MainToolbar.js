@@ -329,7 +329,7 @@ const MainToolbar = () => {
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
-              <ListItemText primary={t('sharedDrivers')} />
+              <ListItemText primary="Conducteur" />
             </ListItem>
             <ListItem button onClick={() => history.push('/settings/SummarySeq')}>
               <ListItemIcon>

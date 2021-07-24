@@ -6,11 +6,11 @@ import time
 import random
 
 id = '000011'
-server = 'localhost:5055'
+server = '197.230.172.211:5027'
 period = 1
 step = 0.001
-device_speed = 140
-driver_id = '123456'
+device_speed = 30
+driver_id = '22333'
 """ waypoints = [(33.5432254, -7.6406825), (33.54322565, -7.6406824)] """
 
 waypoints = [

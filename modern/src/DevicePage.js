@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-
+import { useRef } from 'react';
 import t from './common/localization';
 import EditItemView from './EditItemView';
 import { Accordion, AccordionSummary, AccordionDetails, makeStyles, Typography, FormControlLabel, Checkbox } from '@material-ui/core';
@@ -11,6 +11,10 @@ import SelectField from './form/SelectField';
 import { deviceCategories } from './common/deviceCategories';
 import LinkField from './form/LinkField';
 import { prefixString } from './common/stringUtils';
+import { Card, Button  } from '@material-ui/core';
+import { KeyboardDatePicker,MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+
 
 const useStyles = makeStyles(() => ({
   details: {
@@ -20,13 +24,32 @@ const useStyles = makeStyles(() => ({
 
 const DevicePage = () => {
   const classes = useStyles();
-
   const [item, setItem] = useState();
   const [openthedial,setopenthedial] =useState(false)
+  const uploadedImage = useRef(null);
+  const imageUploader = useRef(null);
+  const [selectedDate, handleDateChange] = useState(new Date());
+
+
+  const handleImageUpload = e => {
+    const [file] = e.target.files;
+    if (file) {
+      const reader = new FileReader();
+      const {current} = uploadedImage;
+      current.file = file;
+      reader.onload = (e) => {
+          current.src = e.target.result;
+      }
+      reader.readAsDataURL(file);
+    }
+  };
+
   
   
 
   return (
+    <MuiPickersUtilsProvider utils={DateFnsUtils} >
+
     <EditItemView endpoint="devices" item={item} setItem={setItem} opentheDial={openthedial}   >
       {item &&
         <>
@@ -49,21 +72,36 @@ const DevicePage = () => {
                 onChange={event => setItem({...item, uniqueId: event.target.value})}
                 label={t('deviceIdentifier')}
                 variant="filled" />
-                  {/* <TextField
-                margin="normal"
-                value={item.contact || ''}
-                onChange={()=> setItem({...item, contact:valueSeq.substring(2,valueSeq.length) })}
-                label={"№ Sequence "}
-                variant="filled" />  */}
+                 
             </AccordionDetails>
           </Accordion>
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant="subtitle1">
-                {t('sharedExtra')}
+                Fiche vehicule
               </Typography>
             </AccordionSummary>
             <AccordionDetails className={classes.details}>
+            <div style={{marginTop:20,marginBottom:40, maxWidth:160,maxHeight:170}}>
+            <label htmlFor="pic-upload"  >
+             <input 
+            id="pic-upload"
+            name="pic-upload"
+            type="file" accept="image/*" onChange={handleImageUpload}
+            ref={imageUploader} style={{ display: 'none' }}
+             />
+             <Card style={{maxWidth:160,maxHeight:170}}>
+             <img style={{marginTop:20,maxWidth:160,maxHeight:170}} ref={uploadedImage} src='/blankcar.jpg' alt='driver' />
+             </Card>
+             <Button
+             style={{marginTop:10}}
+             variant="outlined"
+             size="small"
+             component="span" >
+             Choisir image
+             </Button>
+              </label>
+              </div>
               <SelectField
                 margin="normal"
                 value={item.groupId || 0}
@@ -71,19 +109,63 @@ const DevicePage = () => {
                 endpoint="/api/groups"
                 label={t('groupParent')}
                 variant="filled" />
+                       <TextField
+                margin="normal"
+                value={item.contact || ''}
+                onChange={event => setItem({...item, contact: event.target.value})}
+                label={"Immatriculation"}
+                variant="filled" />
               <TextField
                 margin="normal"
                 value={item.phone || ''}
                 onChange={event => setItem({...item, phone: event.target.value})}
-                label={t('sharedPhone')}
+                label={"Marque"}
                 variant="filled" />
               <TextField
                 margin="normal"
                 value={item.model || ''}
                 onChange={event => setItem({...item, model: event.target.value})}
-                label={t('deviceModel')}
+                label={"Modéle"}
                 variant="filled" />
-             
+                <TextField
+                margin="normal"
+                value={item.model || ''}
+                onChange={event => setItem({...item, model: event.target.value})}
+                label={"Pays"}
+                variant="filled" />
+                 <TextField
+                margin="normal"
+                value={item.model || ''}
+                onChange={event => setItem({...item, model: event.target.value})}
+                label={"Energie"}
+                variant="filled" />
+                <KeyboardDatePicker
+        style={{marginTop:'20px',marginInline:"10px"}}
+        clearable
+        value={selectedDate}
+        placeholder="10/10/2018"
+        //inputVariant="outlined"
+        label="Date d'Entrée'"
+        size="small"
+        onChange={date => {handleDateChange(date)}}
+       
+        format="MM/dd/yyyy"
+      />
+       
+        <KeyboardDatePicker
+        style={{marginTop:'20px',marginInline:"10px"}}
+        clearable
+        value={selectedDate}
+        placeholder="10/10/2018"
+        //inputVariant="outlined"
+        label="Date de Sortie"
+        size="small"
+        onChange={date => {handleDateChange(date)}}
+       
+        format="MM/dd/yyyy"
+      />
+               
+           
               <SelectField
                 margin="normal"
                 value={item.category || 'default'}
@@ -188,6 +270,8 @@ const DevicePage = () => {
         </>
       }
     </EditItemView>
+    </MuiPickersUtilsProvider>
+
   );
 }
 
