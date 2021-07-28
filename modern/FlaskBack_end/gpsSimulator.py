@@ -5,8 +5,8 @@ import http.client
 import time
 import random
 
-id = '000011'
-server = '197.230.172.211:5027'
+id = '000012'
+server = 'localhost:5055'
 period = 1
 step = 0.001
 device_speed = 30

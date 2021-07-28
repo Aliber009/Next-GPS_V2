@@ -27,7 +27,9 @@ import { useState,useEffect } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { CSVLink, CSVDownload } from "react-csv";
 import GetAppOutlinedIcon from '@material-ui/icons/GetAppOutlined';
-//import { Divider } from '@material-ui/core';
+import SwapCallsOutlinedIcon from '@material-ui/icons/SwapCallsOutlined';
+import PauseIcon from '@material-ui/icons/Pause';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -115,6 +117,28 @@ useEffectAsync(async()=>{
     position.forEach(i=>{if(i.deviceId==item.id){text=i.attributes.totalDistance}})
     return text
   }
+  var place=""
+  //get adress
+  const [adress,setadress]=useState("")
+  const [loadgeocode,setloadgeocode]=useState(false)
+  const geocode=async(item)=>{
+    setloadgeocode(true)
+    var lat=""
+    var lon=""
+    
+    position.forEach(i=>{if(i.deviceId==item.id){lat=i.latitude.toString();lon=i.longitude.toString()}})
+    const r =await fetch("https://api.openrouteservice.org/geocode/reverse?api_key=5b3ce3597851110001cf624803d896806f2544b6a95312df342a12d7&point.lon="+lon+"&point.lat="+lat)
+    if(r.ok){
+      const response=await r.json();
+      setadress(response.features[0].properties.label)
+    } 
+    else{
+      setadress("Donnée indisponible")
+    }
+    setloadgeocode(false)
+}
+
+  //end of adress
   
    
   
@@ -143,7 +167,6 @@ useEffectAsync(async()=>{
       setconst(ro)
       for(var i=0;i<ro.length;i++){  
          x=await showListGPSonly(ro[i].id)
-
          
           }
           setxx(res)
@@ -180,6 +203,8 @@ const cancelSearch = () => {
 
   //end of search filter
 
+  
+
   return (
     <div style={{maxHeight:'100%'}}>
   <SearchBar
@@ -207,18 +232,26 @@ const cancelSearch = () => {
          
           <ListItem button key={item.id} onClick={() => dispatch(devicesActions.select(item))}>
             <ListItemAvatar>
-              <Avatar color="primary">
+              <Tooltip onClose={()=>setadress("")}  title={<>
+               {loadgeocode?(
+               <CircularProgress style={{color:"#FFFF"}} size="25px"/> 
+               ):(adress?adress:"clicker")}</>
+              } arrow>
+              <Avatar  onClick={()=> geocode(item)} color="primary">
                 <img className={classes.icon} src={`images/icon/${item.category || 'default'}.svg`} alt="" />
               </Avatar>
+              </Tooltip>
             </ListItemAvatar>
             
             <div>
+
             <ListItem  style={{marginBottom:"20px"}}>
             <ListItemText   
             primary={<Typography variant="subtitle2" style={{ marginTop:'-15px' ,color: '#000000' }}>{item.name.toUpperCase()}</Typography> }
             >
             </ListItemText>  
             </ListItem >
+           
             <Tooltip title={"Détaché Le: "+drivors(item.id)[drivors(item.id).length-1].date || " "} arrow>
             <TextField
             disabled
@@ -229,7 +262,9 @@ const cancelSearch = () => {
             size="small"
             label="Dernier sequentiel"
         />
+        
         </Tooltip>
+        <div  >
             <Tooltip title={item.status} arrow>
             <IconButton style={{marginLeft:-5, width:"20px",height:"20px"}}>
             <WifiIcon
@@ -251,11 +286,31 @@ const cancelSearch = () => {
             <LocalGasStationIcon color="primary" style={{width:"20px",height:"20px"}}  /> 
             </IconButton>
             </Tooltip>
-            <Tooltip title={"Ajouter Facture"} arrow>
+            <Tooltip  title={"afficher dernier trajet"} arrow>
             <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>history.push('/cout/'+item.id)} >
-            <AttachMoneyIcon color="primary" style={{width:"20px",height:"20px"}} /> 
+            <SwapCallsOutlinedIcon color="primary" style={{width:"20px",height:"20px"}} /> 
             </IconButton>
             </Tooltip>
+            <Tooltip title={"Dernier Stop enregistré"} arrow>
+            <span>
+              <Button style={{ pointerEvents: "none" }} variant="outlined" startIcon={<PauseIcon />}  >
+              <Typography  variant="subtitle1" style={{fontSize:14}} > Stop :</Typography>
+              </Button>
+              </span>
+              </Tooltip>
+            </div> 
+            
+            {/* <div style={{marginTop:"10px"}}>
+            <Tooltip title={"Dernier Stop enregistré"} arrow>
+            <span>
+              <Button style={{ pointerEvents: "none" }} variant="outlined" startIcon={<PauseIcon />}  >
+              <Typography  variant="subtitle1" style={{fontSize:14}} > Stop :</Typography>
+              </Button>
+              </span>
+              </Tooltip>
+
+          </div>   */}
+            
             </div>
             
             <ListItemSecondaryAction>

@@ -17,8 +17,26 @@ const ReplayPathMap = ({ positions }) => {
         }
       });
   }
+  
+  map.addLayer({
+    'id': id,
+    'type': 'line',
+    'source': id,
+    'filter': ['==', '$type', 'LineString'],
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
+    'paint': {
+      'line-color': '#3cb2d0',
+      'line-width': {
+        'base': 1.5,
+        'stops': [[1, 0.5], [8, 3], [15, 6], [22, 8]]
+      }
+    }
+  });
  
-    map.addLayer({
+    /* map.addLayer({
       'source': id,
       'id': id,
       'type': 'line',
@@ -30,26 +48,45 @@ const ReplayPathMap = ({ positions }) => {
          'line-color': '#333',
          'line-width': 5,
       },
-    });
-
-    map.loadImage(
-      '/start.png',
-      function (error, image) {
-      if (error) throw error;
-       
-      // Add the image to the map style.
-      map.addImage('cat', image);}
-      )
+    }); */
+    /* map.loadImage('/arro.png', (err, image) => {
+      if (err) { return; }
+      map.addImage('arrow', image);
       map.addLayer({
+        'id': 'points',
+        'type': 'symbol',
+        'source': 'id',
+        'layout': {
+          'symbol-placement': 'line',
+          'symbol-spacing': 1,
+          'icon-allow-overlap': true,
+          // 'icon-ignore-placement': true,
+          'icon-image': 'arrow',
+          'icon-size': 0.045,
+          'visibility': 'visible'
+        }
+      });
+    }); */
+    
+    map.loadImage('/Fichier 5.png', (err, image) => {
+      if (err) { return; }
+      map.addImage('cat', image);
+    })
+
+       map.addLayer({
         'id': 'points',
         'type': 'symbol',
         'source': id , // reference the data source
         'layout': {
+          'icon-allow-overlap': true,
+          'symbol-placement': 'line',
+          'symbol-spacing': 1,
+
         'icon-image': 'cat', // reference the image
-        'icon-size': 0.1
+        'icon-size': 0.11
         }
         });
-        map.addLayer({
+        /*map.addLayer({
           'source': id,
           'id': "fill-line",
           'type': 'line',
@@ -61,7 +98,7 @@ const ReplayPathMap = ({ positions }) => {
              'line-color': '#3edbf0',
              'line-width': 4,
           },
-        });
+        }); */
         
 
     return () => {

@@ -12,9 +12,15 @@ import VerticalLinearStepper from './historyStepper'
 import GetAppOutlinedIcon from '@material-ui/icons/GetAppOutlined';
 import { CSVLink, CSVDownload } from "react-csv";
 import CSVReader from 'react-csv-reader'
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 
-//import  IconButton  from '@material-ui/core';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles(theme => ({
   columnAction: {
@@ -64,6 +70,8 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
     sethistoryopen(open);
   };
   
+  const [loading,setloading]=useState(false)
+
   useEffectAsync(async () => {
     const response = await fetch('/api/drivers');
     if (response.ok) {
@@ -72,9 +80,11 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
       
       
     }
+    setloading(true)
+
   }, [updateTimestamp]);
 
-  console.log(items)
+  
 
  // histoy by order of time 
  const parseJsonHistory=(data)=>{
@@ -124,6 +134,9 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
 //
 
   return (
+    <>
+    {loading ?(
+      
     <div
     onClick={(event)=>{if(historyopen && event.target.className == "MuiBackdrop-root" ){sethistoryopen(false)}}}
     >
@@ -181,28 +194,56 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
     </TableContainer>
     
     </div>
+    
+    ):(<LinearProgress />)}
+    </>
+        
   );
 }
 
 const SummarySeq = () => {
   const classes = useStyles();
+  const [loading,setloading]=useState(true)
+  //feedback
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+  //end of feedback
+
   const importCSV=async(data)=>{
+    
     for (var i=1;i<data.length;i++)
     {
-      await fetch('api/drivers',{
+     setloading(false)
+     const res = await fetch('api/drivers',{
       method:"POST",
       headers: { 'Content-Type': 'application/json' },
       body:JSON.stringify({
-          name:"S"+data[i][0],
+          name:"S*"+data[i][0],
           uniqueId:data[i][1],
           attributes:{}
         })
       })
+      if(!res.ok){
+        setOpen(true)
+      }
     }
+    setloading(true)
   }
   return (
     <>
       <MainToolbar />
+      {loading?(<>
       <EditCollectionView content={DriversView} editPath="/settings/seq" endpoint="drivers" />
       <Button className={classes.fab} variant="outlined" >
       <div style={{ height: 'fit-content' ,position: "absolute" ,left: "0px",top: "0px" ,zIndex: 1,opacity:0}}>
@@ -210,8 +251,13 @@ const SummarySeq = () => {
       </div>
        Importer depuis fichier Excel
      </Button>
-      
-      
+     </>
+      ):(<LinearProgress />)}
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+     <Alert onClose={handleClose} severity="warning">
+      Un ou plusieur numéro Sequentiels ne peut étre importé!
+      </Alert>
+     </Snackbar>
     </>
   );
 }

@@ -27,9 +27,11 @@ import TextField from '@material-ui/core/TextField';
 import SearchBar from "material-ui-search-bar";
 import { useState,useEffect } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-
-
+import ReplayPathMap from './map/ReplayPathMap';
+import PositionsMap from './map/PositionsMap';
+import Map from './map/Map';
+import ReportFilter from './reports/ReportFilter';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -127,7 +129,7 @@ const [laoding,setloading]=useState(false)
   const [constantItems,setconst] =useState([])
   
 
-  var M=new Map()
+  
   const [xx,setxx]=useState({})
   useEffectAsync(async () => {
     var x={}
@@ -167,6 +169,22 @@ const cancelSearch = () => {
 
   //end of search filter
 
+  //last replay
+  const [positions, setPositions] = useState([]);
+  const [replay, setreplay] = useState(false);
+  const [index, setIndex] = useState(0);
+  const handleSubmit = async (deviceId, from, to, _, headers) => {
+    const query = new URLSearchParams({ deviceId, from, to });
+    const response = await fetch(`/api/positions?${query.toString()}`, { Accept: 'application/json' });
+    if (response.ok) {
+      setIndex(0);
+      setPositions(await response.json());
+    }
+    setreplay(false)
+  };
+
+  //end of last replay 
+
   return (
     <div style={{maxHeight:'100%'}}>
   <SearchBar
@@ -175,7 +193,8 @@ const cancelSearch = () => {
     onCancelSearch={() => cancelSearch()}
   />
 
-    {laoding ?(   
+    {laoding ?( 
+        
     <List className={classes.list} >
       {rows.map((item, index, list) => (
         
@@ -183,6 +202,10 @@ const cancelSearch = () => {
           
          {xx[item.id] != undefined &&
           <>
+           
+       
+
+          
           
           <ListItem button key={item.id} onClick={() => dispatch(devicesActions.select(item))}>
             
@@ -231,11 +254,24 @@ const cancelSearch = () => {
             <LocalGasStationIcon color="primary" style={{width:"20px",height:"20px"}}  /> 
             </IconButton>
             </Tooltip>
-            <Tooltip title={"Ajouter Facture"} arrow>
-            <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>history.push('/cout/'+item.id)} >
+            <Tooltip title={"Afficher dernier trajet"} arrow>
+            <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>setreplay(true)} >
             <AttachMoneyIcon color="primary" style={{width:"20px",height:"20px"}} /> 
             </IconButton>
             </Tooltip>
+            <ReplayPathMap positions={positions} />
+            { replay &&  
+            <div style={{display:"none"}} >
+              
+        
+            <ReportFilter handleSubmit={handleSubmit(item.id,moment().startOf('day').toISOString(),moment().endOf('day').toISOString())} showOnly />
+            </div>
+             }
+            {/* <Tooltip title={"Ajouter Facture"} arrow>
+            <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>history.push('/cout/'+item.id)} >
+            <AttachMoneyIcon color="primary" style={{width:"20px",height:"20px"}} /> 
+            </IconButton>
+            </Tooltip> */}
             </div>
             
             <ListItemSecondaryAction>
@@ -255,6 +291,8 @@ const cancelSearch = () => {
       
       ))}
     </List>
+   
+    
     ):(< CircularProgress style={{marginTop:"50px",marginLeft:"18vh"}} />)
   }
     

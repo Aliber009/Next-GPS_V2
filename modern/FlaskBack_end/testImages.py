@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, Response,flash, redirect, url_for
 from werkzeug.datastructures import ImmutableMultiDict
 import os 
 
-UPLOAD_FOLDER = './uploads'
+UPLOAD_FOLDER = r'C:\Users\ALTERNATOR\Desktop\Rapport-PFE\PFE\nextTracker\nextTrac\modern\public'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 

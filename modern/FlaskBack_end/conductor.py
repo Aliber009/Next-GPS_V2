@@ -11,7 +11,7 @@ class drivers(db.Model):
     lastname = db.Column(db.String(100))
     etat = db.Column(db.String(100))
     Adresse = db.Column(db.String(300))
-    email = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String(100))
     ville = db.Column(db.String(100))
     phone = db.Column(db.String(500))
     pays = db.Column(db.String(100))

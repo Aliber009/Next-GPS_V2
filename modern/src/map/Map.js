@@ -200,6 +200,9 @@ const Map = ({ children }) => {
     });
 }, []); */
 
+  const [startpoint,setstartpoint]=useState(false)
+  const [endpoint,setendpoint]=useState(false)
+
   return (
     <div style={{ width: '100%', height: '100%' }} ref={containerEl}>
       <div style={{position: 'absolute', bottom: '10px', left: '10px',zIndex:1}}>
@@ -209,17 +212,20 @@ const Map = ({ children }) => {
         aria-label="vertical outlined primary button group"
         variant="contained"
       >
-        <Button startIcon={<RoomIcon />} onClick={()=>{detectPoint1();}}>{mousePlace1.length>5?mousePlace1.toString():"Départ"}</Button>
-        <Button  startIcon={<WhereToVoteIcon />} onClick={()=>{detectPoint2()}} >{mousePlace2.length>5?mousePlace2.toString():"Arrivée"}</Button>
+        <Button startIcon={<RoomIcon />} onClick={()=>{detectPoint1();setstartpoint(true)}}>{mousePlace1.length>5?mousePlace1.toString():"Départ"}</Button>
+        <Button  startIcon={<WhereToVoteIcon />} onClick={()=>{detectPoint2();setendpoint(true)}} >{mousePlace2.length>5?mousePlace2.toString():"Arrivée"}</Button>
         <Button  startIcon={<SettingsEthernetIcon />} onClick={()=>{detectPoint2()}} >{time.length>2?time:"DISTANCE"}</Button>
         <Button  startIcon={<AccessTimeIcon />} onClick={()=>{detectPoint2()}} >{dist.length>2?dist:"TIME"}</Button>
       </ButtonGroup>
       <IconButton color="primary" style={{ marginBottom:-25 }}>
        < SendIcon />
       </IconButton>
+      {startpoint & endpoint  &&
       <OpenRoute 
      distance={topass}  time={topass2} start={mouseCoor.toString().substring(7,mouseCoor.toString().length-1)} end={mouseCoor2.toString().substring(7,mouseCoor2.toString().length-1)} />
-      </div>
+      }
+     </div>
+
       {mapReady && children}
     </div>
   );

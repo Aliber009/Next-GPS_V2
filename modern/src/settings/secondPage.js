@@ -1,4 +1,4 @@
-import React , { useState } from 'react';
+import React , { useState, useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -9,10 +9,17 @@ import { ListItem } from '@material-ui/core';
 
 export default function PaymentForm({careerData,dataFirstPage}) {
   const [selectedDate, handleDateChange] = useState(new Date());
-  const [infomet,setimnfomet] = useState({})
+  const [infomet,setimnfomet] = useState({contrat:null,permis:null,dateEntry:null,dateSotie:null})
   const [selected,setselected] = useState([])
+ 
 
-  careerData(infomet)
+  useEffect(() => {
+
+    careerData(infomet)
+    
+  }, [infomet])
+  
+  
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} >
 
@@ -22,7 +29,7 @@ export default function PaymentForm({careerData,dataFirstPage}) {
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <TextField required id="contrat" label="Contrat" fullWidth 
+          <TextField  id="contrat" label="Contrat" fullWidth 
            onChange={(event)=>setimnfomet({...dataFirstPage,...infomet,contrat:event.target.value})}
           />
         </Grid>
@@ -37,13 +44,14 @@ export default function PaymentForm({careerData,dataFirstPage}) {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField required id="expDate" label="Permis" fullWidth
+          <TextField  id="expDate" label="Permis" fullWidth
            onChange={(event)=>setimnfomet({...dataFirstPage,...infomet,permis:event.target.value})}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
             label="Centre d'Affectation"
+            required
             onChange={(event)=>setimnfomet({...dataFirstPage,...infomet,CentreAffectation:event.target.value})}
             //helperText="Last three digits on signature strip"
             fullWidth

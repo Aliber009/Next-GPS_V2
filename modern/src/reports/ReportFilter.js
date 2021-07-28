@@ -4,7 +4,7 @@ import t from '../common/localization';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
-const ReportFilter = ({ children, handleSubmit, showOnly }) => {
+const ReportFilter = ({ children, handleSubmit, showOnly, handleSubmittoday }) => {
   const devices = useSelector(state => Object.values(state.devices.items));
   const [deviceId, setDeviceId] = useState();
   const [period, setPeriod] = useState('today');
@@ -53,6 +53,7 @@ const ReportFilter = ({ children, handleSubmit, showOnly }) => {
       mail,
       { Accept: accept }
     );
+    
   }
 
   return (

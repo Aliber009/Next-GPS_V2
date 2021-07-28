@@ -16,7 +16,7 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import GeofenceEditMap from './map/geoEdit'
 import FullWidthTabs from './buttomNav'
 import Notif from './notifAlert'
-import OpenRoute from './map/openRoute';
+
 
 
 
@@ -83,7 +83,7 @@ const MainPage = ({ width }) => {
           variant='permanent'
           classes={{ paper: classes.drawerPaper }}>
           <FullWidthTabs />
-          {/* <DevicesList /> */}
+          
          
         </Drawer>
         
@@ -93,7 +93,6 @@ const MainPage = ({ width }) => {
           <ContainerDimensions>
        
             <Map>
-              {/*  <OpenRoute /> */}
               <CurrentLocationMap />
               <AccuracyMap />
               <CurrentPositionsMap />

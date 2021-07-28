@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -20,11 +20,17 @@ const useStyles = makeStyles(theme => ({
 })
 )
 
-export default function AddressForm({persoData}) {
+export default function AddressForm({persoData,alldata,alldata2}) {
   const {id} = useParams()
   const [selectedDate, handleDateChange] = useState(new Date());
-  const [item,setItem]=useState({})
-  persoData(item);
+  const [item,setItem]=useState({Adresse:null,email:null,etat:null,pays:null,DateNaissance:null})
+
+  useEffect(() => {
+    
+    persoData(item);
+    
+  }, [item])   
+  
   const classes = useStyles();
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
@@ -79,7 +85,8 @@ export default function AddressForm({persoData}) {
             id="firstName"
             name="firstName"
             label="Prénom"
-            onChange={(event)=>setItem({...item,driverId:id,name:event.target.value})}
+            value={alldata.name}
+            onChange={(event)=>setItem({...item,driverId:id,name:event.target.value  })}
             fullWidth
             autoComplete="given-name"
           />
@@ -90,17 +97,19 @@ export default function AddressForm({persoData}) {
             id="lastName"
             name="Nom"
             label="Nom"
-            onChange={(event)=>setItem({...item,lastname:event.target.value})}
+            value={alldata.lastname}
+            onChange={(event)=>setItem({...item,lastname:event.target.value })}
             fullWidth
             autoComplete="family-name"
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
-            required
+            
             id="address1"
             name="address1"
             label="Addresse "
+            value={alldata.Adresse}
             onChange={(event)=>setItem({...item,Adresse:event.target.value})}
             fullWidth
             autoComplete="shipping address-line1"
@@ -111,6 +120,7 @@ export default function AddressForm({persoData}) {
             id="address2"
             name="address2"
             label="E-mail"
+            value={alldata.email}
             onChange={(event)=>setItem({...item,email:event.target.value})}
             fullWidth
             
@@ -122,6 +132,7 @@ export default function AddressForm({persoData}) {
             id="city"
             name="city"
             label="Ville"
+            value={alldata.ville}
             onChange={(event)=>setItem({...item,ville:event.target.value})}
             fullWidth
             
@@ -136,6 +147,7 @@ export default function AddressForm({persoData}) {
             id="zip"
             name="zip"
             label="Phone"
+            value={alldata.phone}
             onChange={(event)=>setItem({...item,phone:event.target.value})}
             fullWidth
             autoComplete="shipping postal-code"
@@ -143,10 +155,11 @@ export default function AddressForm({persoData}) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            required
+            
             id="country"
             name="country"
             label="Etat"
+            value={alldata.etat}
             onChange={(event)=>setItem({...item,etat:event.target.value})}
             fullWidth
             autoComplete="shipping country"
@@ -156,7 +169,7 @@ export default function AddressForm({persoData}) {
         <KeyboardDatePicker
         style={{marginTop:'20px',marginInline:"10px"}}
         clearable
-        value={selectedDate}
+        value={alldata.DateNaissance}
         placeholder="10/10/2018"
         //inputVariant="outlined"
         label="Date de naissance"
