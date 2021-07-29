@@ -105,7 +105,9 @@ const ReplayPathMap = ({ positions }) => {
       map.removeLayer(id);
       map.removeLayer("fill-line");
       map.removeLayer("points");
+      if(map.getSource(id)){
       map.removeSource(id);
+      }
     };
   }, []);
 
