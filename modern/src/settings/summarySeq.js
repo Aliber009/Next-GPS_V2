@@ -77,8 +77,6 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
     if (response.ok) {
       const res =  await response.json()
       setItems(res);
-      
-      
     }
     setloading(true)
 

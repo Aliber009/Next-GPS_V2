@@ -61,7 +61,7 @@ useEffectAsync(async () => {
     if (id) {
       url += `/${id}`;
     }
-   
+    console.log(item)
     const response = await fetch(url, {
       method: !id ? 'POST' : 'PUT',
       headers: { 'Content-Type': 'application/json' },

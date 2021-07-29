@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FullWidthTabs() {
+export default function FullWidthTabs(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -90,9 +90,6 @@ export default function FullWidthTabs() {
           <Tab icon={<LocationOffOutlinedIcon />} label="Devices Sans N seq" {...a11yProps(1)} />
           <Tab icon={< CreateNewFolderOutlinedIcon/>} label="GROUPES" {...a11yProps(2)} />
           <Tab icon={< ChangeHistoryOutlinedIcon />} label="GEOFENCES" {...a11yProps(3)} />
-         
-          
-          
         </Tabs>
       </AppBar>
       <SwipeableViews

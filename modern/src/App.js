@@ -21,6 +21,7 @@ import { LinearProgress } from '@material-ui/core';
 import TripReportPage from './reports/TripReportPage';
 import StopReportPage from './reports/StopReportPage';
 import SummaryReportPage from './reports/SummaryReportPage';
+import PrintReportPage from './reports/PrintReportPage';
 import ChartReportPage from './reports/ChartReportPage';
 import DriversPage from './settings/DriversPage';
 import DriverPage from './settings/DriverPage';
@@ -33,14 +34,16 @@ import missionPage from './missionsPage'
 import Mission from './mission'
 import BasicTable from './missionSummary'
 import CachingController from './CachingController';
+import DashboardPage from './dashboard/DashboardPage'
 import Parc from './parc'
 import CardChart from './chartParc';
 import Cost from './Cost';
 import Seq from './settings/seq'
-import SummarySeq from './settings/summarySeq'
+import SummarySeq from './settings/SummarySeq'
 import CheckboxSelectionGrid from './checkSelection';
 import Checkout from './settings/driverFiche';
 import Image from './image';
+import SeqGroups from './settings/SeqGroups/SeqGroupsPage'
 
 const App = () => {
   const initialized = useSelector(state => !!state.session.server && !!state.session.user);
@@ -63,6 +66,7 @@ const App = () => {
               <Route exact path='/settings/notifications' component={NotificationsPage} />
               <Route exact path='/settings/notification/:id?' component={NotificationPage} />
               <Route exact path='/settings/groups' component={GroupsPage} />
+              <Route exact path='/settings/groups-numero-sequence' component={SeqGroups} />
               <Route exact path='/settings/group/:id?' component={GroupPage} />
               <Route exact path='/settings/drivers' component={DriversPage} />
               <Route exact path='/settings/driver/:id?' component={DriverPage} />
@@ -84,6 +88,7 @@ const App = () => {
               <Route exact path='/reports/missions' component={missionPage} />
               <Route exact path='/reports/mission' component={Mission} />
               <Route exact path='/reports/missionSummary' component={BasicTable} />
+              <Route exact path='/reports/centre-de-rapport' component={PrintReportPage} />
               <Route exact path='/settings/parc' component={Parc} />
               <Route exact path='/settings/parc/auto' component={CardChart} />
               <Route exact path='/cout/:id?' component={Cost} />
@@ -92,6 +97,7 @@ const App = () => {
               <Route exact path='/image' component={Image} />
 
 
+              <Route exact path='/dashboard' component={DashboardPage} />
             </Switch>
           )}
         </Route>

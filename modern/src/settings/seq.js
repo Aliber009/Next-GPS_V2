@@ -43,18 +43,10 @@ const Seq = () => {
     if(respo.ok)
     {
       const res=await respo.json()
-      
       device=res[0]
     }
 
   }
-
-
-
-
-
-     
-
   return (
     <>
     <EditItemView endpoint="drivers" item={m} setItem={setItem}  >
@@ -79,7 +71,6 @@ const Seq = () => {
                 onChange={event => setItem({...item, uniqueId: event.target.value})}
                 label={"Code"}
                 variant="filled" />
-                   
             </AccordionDetails>
           </Accordion>
            <Accordion>
