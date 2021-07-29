@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import { map } from './Map';
 import { useEffectAsync } from '../reactHelper';
 import { geofenceToFeature } from './mapUtil';

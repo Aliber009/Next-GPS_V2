@@ -31,6 +31,7 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import FolderIcon from '@material-ui/icons/Folder';
 import ReplayIcon from '@material-ui/icons/Replay';
 import BuildIcon from '@material-ui/icons/Build';
+import PrintIcon from '@material-ui/icons/Print';
 import t from './common/localization';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import Badge from '@material-ui/core/Badge';
@@ -43,10 +44,9 @@ import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import Collapse from '@material-ui/core/Collapse';
 import EcoIcon from '@material-ui/icons/Eco';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import StarBorder from '@material-ui/icons/StarBorder';
 import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
 
 
@@ -255,6 +255,12 @@ const MainToolbar = () => {
               </ListItemIcon>
               <ListItemText primary={t('reportReplay')} />
             </ListItem>
+            <ListItem button onClick={() => history.push('/dashboard')}>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Dashboard'} />
+            </ListItem>
           </List>
           <Divider />
           <List
@@ -299,6 +305,12 @@ const MainToolbar = () => {
               </ListItemIcon>
               <ListItemText primary={t('reportChart')} />
             </ListItem>
+            <ListItem button onClick={() => history.push('/reports/centre-de-rapport')}>
+              <ListItemIcon>
+                <PrintIcon  />
+              </ListItemIcon>
+              <ListItemText primary={'Centre de Rapport'} />
+            </ListItem>
           </List>
           <Divider />
           <List
@@ -324,6 +336,12 @@ const MainToolbar = () => {
                 <FolderIcon />
               </ListItemIcon>
               <ListItemText primary={t('settingsGroups')} />
+            </ListItem>
+            <ListItem button onClick={() => history.push('/settings/groups-numero-sequence')}>
+              <ListItemIcon>
+                <FolderIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Groups en numéro de séquence'} />
             </ListItem>
             <ListItem button onClick={() => history.push('/settings/drivers')}>
               <ListItemIcon>

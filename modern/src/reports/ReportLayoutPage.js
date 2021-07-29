@@ -16,21 +16,33 @@ const useStyles = makeStyles(theme => ({
   form: {
     padding: theme.spacing(1, 2, 2),
   },
+  Padding:{
+    padding: '15px'
+  }
 }));
+
+function Filter({ filter }){
+    if (filter)
+      return (
+        <Grid item xs={12} md={3} lg={2} >
+          <Paper style={{padding: '15px'}}>
+            {filter}
+          </Paper>
+        </Grid>
+      )
+    return null
+}
 
 const ReportLayoutPage = ({ children, filter }) => {
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
       <MainToolbar />
-      <div className={classes.content}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={3} lg={2}>
-            <Paper className={classes.form}>
-              {filter}
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={9} lg={10}>
+      <div className={classes.content} >
+        <Grid container spacing={2} >
+          <Filter filter={filter} />
+          <Grid item xs={12} md={9} lg={(filter) ? 10 : 12}>
             <Paper>
               {children}
             </Paper>

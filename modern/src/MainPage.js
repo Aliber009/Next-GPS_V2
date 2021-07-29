@@ -54,19 +54,6 @@ const useStyles = makeStyles(theme => ({
 
 const MainPage = ({ width }) => {
   const [position, setPosition] = useState('top-left');
-  const [data, setData] = useState({
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          coordinates: [-122.41411987304815, 37.792209769935084],
-          type: 'Point'
-        }
-      }
-    ]
-  });
   
   const classes = useStyles();
   //cette fonction c'est pour traiter les data et les organiser de façon à avoir la forme general des API call (comme dans ma database)
@@ -101,11 +88,6 @@ const MainPage = ({ width }) => {
             </Map>
           </ContainerDimensions>
         </div>
-        
-        
-        
-        
-        
       </div>
     </div>
   );

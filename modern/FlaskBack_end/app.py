@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 CORS(app)
 # db should exist beforehand
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:jesuisber@localhost:5432/missionsDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:xelor@localhost:5432/missionsDB'
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

@@ -1,10 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useEffectAsync } from './reactHelper';
+import { useEffectAsync } from '../../reactHelper';
 import { makeStyles } from '@material-ui/core';
+import GroupWorkIcon from '@material-ui/icons/GroupWork';
+import UpdateIcon from '@material-ui/icons/Update';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 const useStyles = makeStyles(theme => ({
+    seqTree: {
+        width: '90%',
+        margin: 'auto',
+        marginTop: '10px'
+    },
     displayTree:{
         padding: '10px',
+        fontSize:'20px',
     },
     nameWrapper: {
         paddingLeft: '5px',
@@ -25,21 +37,11 @@ const useStyles = makeStyles(theme => ({
             opacity: '1',
         }
     },
-    AddFolder: {
-        color: 'green',
-        marginLeft: '15px'
-    },
-    AddSubFolder: {
-        color: 'blue',
-        marginLeft: '15px'
-    },
-    UpdateFolder: {
-        color: 'orange',
-        marginLeft: '15px'
-    },
-    DeleteFolder: {
-        color: 'red',
-        marginLeft: '15px'
+    Icons: {
+        color: '242424',
+        marginLeft: '10px',
+        height: '20px',
+        fontSize: '10px'
     },
     input: {
         display: 'none'
@@ -86,7 +88,7 @@ function Input({show, handleClick, items, setName}) {
         return (
             <div className={(show === 0 && show < 4) ? classes.input : classes.inputShow}>
                 <div>You want to delete the groupe</div>
-                <div className={classes.AddFolder} onClick={handleClick}>✔</div>
+                <div className={classes.Icons} onClick={handleClick}><CheckCircleOutlineIcon style={{width: '20px'}} /></div>
         </div>
         )
     }
@@ -99,7 +101,7 @@ function Input({show, handleClick, items, setName}) {
                     <option key={id} value={item.name.substring(2)}>{item.name.substring(2)}</option>
                 ))}
             </select>
-            <div className={classes.AddFolder} onClick={handleClick}>✔</div>
+            <div className={classes.Icons} onClick={handleClick}><CheckCircleOutlineIcon style={{width: '20px'}} /></div>
             <style jsx>
                 {`
                     select{
@@ -132,17 +134,17 @@ function AddButton({ handleCheck, id, items }) {
         else if (show === 2)
             handleCheck(id, newChild, false, false, false, false)
         else if (show === 3)
-            handleCheck(id, false, false, true, "newName", false)
+            handleCheck(id, false, false, true, name, false)
         setShow(0)
     }
 
     return (
         <div>
             <div className={classes.Add}>
-                <div className={classes.AddFolder} onClick={() => setShow(1)}>+</div>
-                <div className={classes.AddSubFolder} onClick={() => setShow(2)}>+</div>
-                <div className={classes.UpdateFolder} onClick={() => setShow(3)}>○</div>
-                <div className={classes.DeleteFolder} onClick={() => setShow(4)}>x</div>
+                <div className={classes.Icons} onClick={() => setShow(2)}><GroupAddIcon style={{width: '20px'}} /></div>
+                <div className={classes.Icons} onClick={() => setShow(1)}><GroupWorkIcon style={{width: '20px'}} /></div>
+                <div className={classes.Icons} onClick={() => setShow(3)}><UpdateIcon style={{width: '20px'}} /></div>
+                <div className={classes.Icons} onClick={() => setShow(4)}><HighlightOffIcon style={{width: '20px'}} /></div>
             </div>
             <Input show={show} setShow={setShow} handleClick={handleClick} id={id} items={items} setName={setName} />
         </div>
@@ -168,12 +170,41 @@ function DisplayTree({data, handleCheck, items}) {
     )
 }
 
+function InputGroup({ handleClick }) {
 
-const data = [
-    {id:"eJnlf2Dck9", name: "groupe default", child: []}
-]
+    return (
+        <div>
+            {
+                <input type='text' name="name" />
+            }
+        </div>
+    )
+}
 
-function SeqTree(props) {
+function AddGroup({handleAddGroup}) {
+
+    const handleClick = (newChild) => {
+        handleAddGroup(newChild)
+    }
+
+    return (
+        <div className="addGroup" onClick={handleClick}>
+            <AddCircleIcon style={{width: '150px', height:'50px' }}/>
+            <style jsx>
+                {`
+                    .addGroup{
+                        text-align: center;
+                        width: 150px;
+                        margin: auto;
+                    }
+                `}
+            </style>
+        </div>
+    )
+}
+
+function SeqTree({data}) {
+    const classes = useStyles()
     const [copy, setCopy] = useState(data)
     const [items, setItems] = useState([])
     const [updateTimestamp, setTimeStamp] = useState(Date.now())
@@ -188,9 +219,15 @@ function SeqTree(props) {
                 AddTree(data, id, newChild, isSub, isUpdate, newName, isDelete)
                 setCopy([...data])
             }
+            const handleAddGroup = (newChild) => {
+                data.push(newChild)
+                setCopy([...data])
+            }
+
     return (
-        <div>
+        <div className={classes.seqTree}>
             <DisplayTree data={copy} original={data} handleCheck={handleCheck} items={items} />
+            <AddGroup handleAddGroup={handleAddGroup} />
         </div>
     )
 }

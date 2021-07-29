@@ -54,6 +54,7 @@ export function CardChart() {
         //var x=[{"name":response[0].type,"data":[response[0].Somme]}];
 
         var m = new Map()
+        console.log(response[0])
         m.set(response[0].type, [{ 'x': response[0].Date, 'y': response[0].Somme }])
 
         for (var i = 1; i < response.length; i++) {

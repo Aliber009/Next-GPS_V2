@@ -13,6 +13,7 @@ const Filter = ({ setItems }) => {
   const handleSubmit = async (deviceId, from, to, mail, headers) => {
     const query = new URLSearchParams({ deviceId, from, to, mail });
     eventTypes.forEach(it => query.append('type', it));
+    console.log(eventTypes)
     const response = await fetch(`/api/reports/events?${query.toString()}`, { headers });
     if (response.ok) {
       const contentType = response.headers.get('content-type');

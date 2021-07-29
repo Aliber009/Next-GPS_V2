@@ -58,12 +58,8 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
     if (response.ok) {
       const res =  await response.json()
       setItems(res);
-      
-      
     }
   }, [updateTimestamp]);
-
-  console.log(items)
 
  // histoy by order of time 
  const parseJsonHistory=(data)=>{
@@ -151,8 +147,6 @@ const SummarySeq = () => {
     <>
       <MainToolbar />
       <EditCollectionView content={DriversView} editPath="/settings/seq" endpoint="drivers" />
-      
-      
     </>
   );
 }

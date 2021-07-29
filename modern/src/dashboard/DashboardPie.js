@@ -93,7 +93,6 @@ function DashboardPie({ COLORS, mapInfo, description }) {
     }, [updateTimestamp]);
     if (loading)
         return null
-    console.log(data)
     return (
         <div className={classes.dashboard}>
             <div className={classes.dashboardConnexion}>
@@ -131,14 +130,8 @@ function DashboardPie({ COLORS, mapInfo, description }) {
     )
 }
 
-export function DataPieCo(){
-    const COLORS = ['#80c904', '#C1C1C1'];
-    const map = ['EN LIGNE', 'HORS LIGNE']
-    const data = [
-        {name: 'ONLINE', value: 61},
-        {name: 'OFFline', value: 9},
-    ]
+export function DataPieCo({ map, data, COLORS, description }){
     return (
-        <DashboardPie COLORS={COLORS} mapInfo={map} description='État de connexion' />
+        <DashboardPie COLORS={COLORS} mapInfo={map} description={description} data={data} />
     )
 }

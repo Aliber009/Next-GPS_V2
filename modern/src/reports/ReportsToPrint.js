@@ -433,7 +433,7 @@ function ReportToPrint({ report }){
         case 'conducteur':
             return <DriverBehavior />
         default:
-            return <SpeedExcess />
+            return null
     }
 
 }
