@@ -13,7 +13,7 @@ const Filter = ({ setItems }) => {
 
   const handleSubmit = async (deviceId, from, to, mail, headers) => {
     const query = new URLSearchParams({ deviceId, from, to, daily, mail });
-    const response = await fetch(`/api/reports/summary?${query.toString()}`, { headers });
+    const response = await fetch(`/api/reports/summary?${query.toString()}`);
     if (response.ok) {
       const contentType = response.headers.get('content-type');
       if (contentType) {
@@ -25,7 +25,6 @@ const Filter = ({ setItems }) => {
       }
     }
   }
-
   return (
     <ReportFilter handleSubmit={handleSubmit}>
       <FormControlLabel
@@ -40,7 +39,6 @@ const SummaryReportPage = () => {
   const distanceUnit = useAttributePreference('distanceUnit');
   const speedUnit = useAttributePreference('speedUnit');
   const volumeUnit = useAttributePreference('volumeUnit');
-
   const [items, setItems] = useState([]);
 
   const columns = [{
@@ -93,7 +91,6 @@ const SummaryReportPage = () => {
     hide: true,
     valueFormatter: ({ value }) => formatVolume(value, volumeUnit),                
   }]
-  
   return (
     <ReportLayoutPage filter={<Filter setItems={setItems} />}>
       <DataGrid

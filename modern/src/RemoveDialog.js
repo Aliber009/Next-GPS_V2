@@ -9,7 +9,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 const { REACT_APP_FLASK } = process.env
 
 const RemoveDialog = ({ open, endpoint, itemId, onResult }) => {
-
   const handleRemove = async () => {
     if(endpoint=="drivers"){
       const rem=await fetch(REACT_APP_FLASK+'/lastdetach')

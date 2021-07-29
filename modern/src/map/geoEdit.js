@@ -2,7 +2,7 @@
 import React from 'react';
 import Directions from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
-import MapboxDraw from 'C:/Users/ALTERNATOR/Desktop/Rapport-PFE/PFE/nextTracker/nextTrac/modern/node_modules/@mapbox/mapbox-gl-draw';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import theme from '@mapbox/mapbox-gl-draw/src/lib/theme';
 import { map } from './Map';
 import 'mapbox-gl/dist/mapbox-gl.css';

@@ -102,8 +102,6 @@ useEffectAsync(async() => {
         props.time((directs.features[0].properties.summary.duration/60).toFixed(2)+ " min")
        
     }
-    
-   
     map.getSource(id).setData({
       type: 'Feature',
       geometry:waypoints,
