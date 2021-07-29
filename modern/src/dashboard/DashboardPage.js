@@ -47,11 +47,12 @@ const ReportPrintFilter = ({ setShowData,
   setFrom,
   setTo }) => {
   const classes = useStyle()
-  const [choice, setChoice] = useState('')
+  const [choiceSeq, setChoiceSeq] = useState('')
+  const [choiceGroup, setChoiceGroup] = useState('')
   const [updateTimestamp, setUpdateTimeStamp] = useState(Date.now())
   const [period, setPeriod] = useState('today');
   const [seq, setSeq] = useState([])
-  const dispatch = useDispatch();
+  const [groups, setGroups] = useState([])
   let OFFLINE = 0
   let ONLINE = 0
 
@@ -61,7 +62,6 @@ const ReportPrintFilter = ({ setShowData,
     let selectedTo;
     let x={}
     let copy = []
-    const response = await fetch('/api/devices');
 
     switch (period) {
       case 'today':
@@ -93,19 +93,15 @@ const ReportPrintFilter = ({ setShowData,
         selectedTo = to;
         break;
     }
-
-    if (response.ok) {
-      const ro=await response.json()
-      dispatch(devicesActions.refresh(ro));
-      setRows(ro)
-      ONLINE = ro.filter(({status}) => status === 'online').length
-      OFFLINE = ro.length - ONLINE
+      setRows(seq)
+      ONLINE = seq.filter(({status}) => status === 'online').length
+      OFFLINE = seq.length - ONLINE
       copy = [...data]
       copy[0].value = ONLINE
       copy[1].value = OFFLINE
       setData(copy)
-      setConst(ro)
-      ro.forEach(async (elem, id) => {
+      setConst(seq)
+      seq.forEach(async (elem, id) => {
         const responseDriver = await fetch(`/api/reports/summary?deviceId=${elem.id}&from=${selectedFrom.toISOString()}&to=${selectedTo.toISOString()}&daily=false&mail=false`)
         const responseSpeedLimit = await fetch(`/api/reports/events?deviceId=${elem.id}&from=${selectedFrom.toISOString()}&to=${selectedTo.toISOString()}&type=deviceOverspeed`)
         const responseGeofence = await fetch(`/api/reports/events?deviceId=${elem.id}&from=${selectedFrom.toISOString()}&to=${selectedTo.toISOString()}&type=geofenceExit`)
@@ -122,7 +118,6 @@ const ReportPrintFilter = ({ setShowData,
           setNbGeofence(nbGeofence => nbGeofence + row.length)
         }
       })
-      }
       setLoading(false)
       setRowsDrivers([])
       setShowData(1)
@@ -130,9 +125,14 @@ const ReportPrintFilter = ({ setShowData,
   
   useEffectAsync(async () => {
     const responseDriver = await fetch('/api/drivers');
+    const responseGroup = await fetch('/api/groups');
     if (responseDriver.ok) {
       const res =  await responseDriver.json()
       setSeq(res);
+    }
+    if (responseGroup.ok) {
+      const res =  await responseGroup.json()
+      setGroups(res);
     }
   }, [updateTimestamp]);
 
@@ -143,7 +143,7 @@ const ReportPrintFilter = ({ setShowData,
       <Grid item lg={4}>
         <FormControl variant="filled" margin="normal"  fullWidth>
           <InputLabel>Numéro de séquence</InputLabel>
-          <Select value={choice} onChange={(e) => setChoice(e.target.value)}>
+          <Select value={choiceSeq} onChange={(e) => setChoiceSeq(e.target.value)}>
           {seq.filter((word) => word.name.startsWith('S*')).map((item, id) => (
                     <MenuItem key={id} value={item.name.substring(2)}>{item.name.substring(2)}</MenuItem>
                 ))}
@@ -154,7 +154,10 @@ const ReportPrintFilter = ({ setShowData,
       <Grid item lg={4}>
         <FormControl variant="filled" margin="normal"  fullWidth>
           <InputLabel>Entité</InputLabel>
-          <Select value={choice} onChange={(e) => setChoice(e.target.value)}>
+          <Select value={choiceGroup} onChange={(e) => setChoiceGroup(e.target.value)}>
+          {groups.map((item, id) => (
+                    <MenuItem key={id} value={item.name}>{item.name}</MenuItem>
+                ))}
           </Select>
         </FormControl>
       </Grid>

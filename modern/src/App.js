@@ -34,12 +34,12 @@ import missionPage from './missionsPage'
 import Mission from './mission'
 import BasicTable from './missionSummary'
 import CachingController from './CachingController';
-import DashboardPage from './dashboard/DashboardPage'
+import DashboardPage from './Dashboard/DashboardPage'
 import Parc from './parc'
 import CardChart from './chartParc';
 import Cost from './Cost';
 import Seq from './settings/seq'
-import SummarySeq from './settings/SummarySeq'
+import SummarySeq from './settings/summarySeq'
 import CheckboxSelectionGrid from './checkSelection';
 import Checkout from './settings/driverFiche';
 import Image from './image';
@@ -95,8 +95,6 @@ const App = () => {
               <Route exact path='/checkSelection' component={CheckboxSelectionGrid} />
               <Route exact path='/settings/fiches/:id?' component={Checkout} />
               <Route exact path='/image' component={Image} />
-
-
               <Route exact path='/dashboard' component={DashboardPage} />
             </Switch>
           )}

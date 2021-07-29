@@ -164,54 +164,6 @@ function Activity() {
     )
 }
 
-function HoursActivity() {
-    const columns = [{
-        headerName: 'Numéro séquentiel',
-        field: 'SequentielNumber',
-        type: 'number',
-        flex: 1,
-        headerAlign: 'right',
-      }, {
-        headerName: 'Matricule véhicule',
-        field: 'registrationNumber',
-        type: 'number',
-        flex: 1,
-        headerAlign: 'right',
-      }, {
-        headerName: 'Affectation entité chaque niveau par colonne ',
-        field: 'AffectedEntity',
-        type: 'number',
-        flex: 1,
-        headerAlign: 'right',
-      }, {
-        headerName: 'Nombre d\'heures de fonctionnement durant la période 19H-5H',
-        field: 'WorkHoursPerWeek',
-        type: 'number',
-        flex: 1,
-        headerAlign: 'right',
-      }, {
-        headerName: 'Distance parcourue durant la période 19H-5H',
-        field: 'DistanceMade',
-        type: 'number',
-        flex: 1,
-        headerAlign: 'right',
-      }]
-
-      const [items, setItems] = useState([]);
-
-    return (
-        <div>
-            <Paper>
-                <DataGrid
-                rows={items} 
-                columns={columns} 
-                hideFooter 
-                autoHeight />
-            </Paper>
-        </div>
-    )
-}
-
 function Geofence() {
     const columns = [{
         headerName: 'Numéro séquentiel',
