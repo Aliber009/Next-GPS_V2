@@ -28,10 +28,12 @@ import SearchBar from "material-ui-search-bar";
 import { useState,useEffect } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReplayPathMap from './map/ReplayPathMap';
-import PositionsMap from './map/PositionsMap';
-import Map from './map/Map';
+import PauseIcon from '@material-ui/icons/Pause';
+
 import ReportFilter from './reports/ReportFilter';
 import moment from 'moment';
+import SwapCallsOutlinedIcon from '@material-ui/icons/SwapCallsOutlined';
+import { formatHours } from './common/formatter';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -185,6 +187,48 @@ const cancelSearch = () => {
 
   //end of last replay 
 
+  //get adress
+  const [adress,setadress]=useState("")
+  const [loadgeocode,setloadgeocode]=useState(false)
+  const geocode=async(item)=>{
+    setloadgeocode(true)
+    var lat=""
+    var lon=""
+    
+    position.forEach(i=>{if(i.deviceId==item.id){lat=i.latitude.toString();lon=i.longitude.toString()}})
+    const r =await fetch("https://api.openrouteservice.org/geocode/reverse?api_key=5b3ce3597851110001cf624803d896806f2544b6a95312df342a12d7&point.lon="+lon+"&point.lat="+lat)
+    if(r.ok){
+      const response=await r.json();
+      setadress(response.features[0].properties.label)
+    } 
+    else{
+      setadress("Donnée indisponible")
+    }
+    setloadgeocode(false)
+}
+
+  //end of adress
+  
+  //Function stops
+  const [stop,setstop]=useState("")
+  const [loadstop,setloadstop]=useState(false)
+  const showStop=async(id)=>{
+    setloadstop(true)
+    var stops=""
+    const now =new Date().toISOString()
+    const debut=new Date('2021-07-28 00:00').toISOString()
+    var myHeaders=new Headers()
+    myHeaders.append("Content-Type", "application/json")
+    const r = await fetch('api/reports/stops?deviceId='+id+'&from='+debut+'&to='+now,{method:"GET",headers: {'Accept': 'application/json','Content-Type': 'application/json' }})
+    if(r.ok){
+            const res=await r.json()
+            res.forEach(i=>stops=(i.duration)) 
+    }
+    setstop(formatHours(stops))
+    setloadstop(false) 
+    //return stops
+  }
+
   return (
     <div style={{maxHeight:'100%'}}>
   <SearchBar
@@ -210,9 +254,15 @@ const cancelSearch = () => {
           <ListItem button key={item.id} onClick={() => dispatch(devicesActions.select(item))}>
             
             <ListItemAvatar>
-              <Avatar color="primary">
+            <Tooltip onClose={()=>setadress("")}  title={<>
+               {loadgeocode?(
+               <CircularProgress style={{color:"#FFFF"}} size="25px"/> 
+               ):(adress?adress:"clicker pour afficher l'adresse")}</>
+              } arrow>
+              <Avatar  onClick={()=> geocode(item)} color="primary">
                 <img className={classes.icon} src={`images/icon/${item.category || 'default'}.svg`} alt="" />
               </Avatar>
+              </Tooltip>
             </ListItemAvatar>
             
             <div>
@@ -254,11 +304,22 @@ const cancelSearch = () => {
             <LocalGasStationIcon color="primary" style={{width:"20px",height:"20px"}}  /> 
             </IconButton>
             </Tooltip>
-            <Tooltip title={"Afficher dernier trajet"} arrow>
+            <Tooltip  title={"afficher dernier trajet"} arrow>
             <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>setreplay(true)} >
-            <AttachMoneyIcon color="primary" style={{width:"20px",height:"20px"}} /> 
+            <SwapCallsOutlinedIcon color="primary" style={{width:"20px",height:"20px"}} /> 
             </IconButton>
             </Tooltip>
+            <Tooltip onOpen={()=>showStop(item.id)} title={
+            <>{loadstop?(<CircularProgress style={{color:"#FFFF"}} size="25px" />):(stop!=""? "Dernier Stop enregistré : "+stop :"Donnée indisponible" )} </>
+            }
+            onClose={()=>setstop("None")}
+            arrow>
+            <span>
+              <Button  style={{ width:"20px",height:"20px",pointerEvents: "none" }}  startIcon={<PauseIcon />}  >
+              
+              </Button>
+              </span>
+              </Tooltip>
             <ReplayPathMap positions={positions} />
             { replay &&  
             <div style={{display:"none"}} >
