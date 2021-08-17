@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
-const { REACT_APP_FLASK } = process.env
+
 
 export function CardChart() {
 
@@ -44,7 +44,7 @@ export function CardChart() {
 
   useEffectAsync(async () => {
 
-    const res = await fetch(REACT_APP_FLASK + '/costs')
+    const res = await fetch('/flsk/costs')
     if (res.ok) {
       const response = await res.json()
 
@@ -83,7 +83,7 @@ export function CardChart() {
     seriess = ser
   }
 
-  console.log(globalseries)
+  
   /* 
   const seriess=globalCosts
       const seriess= [{

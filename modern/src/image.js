@@ -60,7 +60,7 @@ export default function Image() {
 
   console.log(formData)
   const saveimage=async()=>{
-    await fetch('http://localhost:5000/upload',{
+    await fetch('/flsk/upload',{
      method:'POST',
      body:formData
 

@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const { REACT_APP_FLASK } = process.env
+
 
 export default function Notif() {
 
@@ -27,7 +27,7 @@ export default function Notif() {
   const [open, setOpen] = React.useState(false);
 
   useEffectAsync(async () => {
-    const res = await fetch(REACT_APP_FLASK + '/mission_users', { method: 'GET' })
+    const res = await fetch('/flsk/mission_users', { method: 'GET' })
     if (res.ok) {
       const json = await res.json();
       for (var i = 0; i < json.length; i++) {

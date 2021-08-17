@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 CORS(app)
 # db should exist beforehand
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:xelor@localhost:5432/missionsDB'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:jesuisber@localhost:5432/missionsDB'
 UPLOAD_FOLDER = './uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -32,8 +32,11 @@ import historyConductor
 
 import testImages
 
+import histocenter
 
+import entites
 
+import histoEntite
 
 
 class missions(db.Model):
@@ -75,7 +78,7 @@ def __repr__(self):
     return f"<ref {self.ref}>"
 
 
-@app.route('/refs', methods=['POST', 'GET'])
+@app.route('/flsk/refs', methods=['POST', 'GET'])
 def handle_refs():
     if request.method == 'POST':
         if request.is_json:
@@ -99,7 +102,7 @@ def handle_refs():
         return jsonify(results)
 
 
-@app.route('/refs/<refs_id>', methods=['PUT', 'DELETE'])
+@app.route('/flsk/refs/<refs_id>', methods=['PUT', 'DELETE'])
 def handle_refs_user(refs_id):
     ref_user = refs.query.get_or_404(refs_id)
     if request.method == 'PUT':
@@ -140,7 +143,7 @@ def __repr__(self):
     return f"<costs {self.type}>"
 
 
-@app.route('/costs', methods=['POST', 'GET'])
+@app.route('/flsk/costs', methods=['POST', 'GET'])
 def handle_Costs():
     if request.method == 'POST':
         if request.is_json:
@@ -167,7 +170,7 @@ def handle_Costs():
         return jsonify(results)
 
 
-@app.route('/costs/<costs_id>', methods=['PUT', 'DELETE'])
+@app.route('/flsk/costs/<costs_id>', methods=['PUT', 'DELETE'])
 def handle_costs_user(costs_id):
     cost_user = costs.query.get_or_404(costs_id)
     if request.method == 'PUT':
@@ -214,7 +217,7 @@ def __repr__(self):
 db.create_all()  # if you add a new table  call this after your model class
 
 
-@app.route('/mission_users', methods=['POST', 'GET'])
+@app.route('/flsk/mission_users', methods=['POST', 'GET'])
 def handle_mission_users():
 
     if request.method == 'POST':
@@ -244,7 +247,7 @@ def handle_mission_users():
         return jsonify(results)
 
 
-@app.route('/mission_users/<mission_users_id>', methods=['PUT', 'DELETE'])
+@app.route('/flsk/mission_users/<mission_users_id>', methods=['PUT', 'DELETE'])
 def handle_mission_user(mission_users_id):
     mission_user = mission_users.query.get_or_404(mission_users_id)
     if request.method == 'PUT':
@@ -264,7 +267,7 @@ def handle_mission_user(mission_users_id):
         return {"message": f"missionUser {mission_user} successfully deleted."}
 
 
-@app.route('/missions', methods=['POST', 'GET'])
+@app.route('/flsk/missions', methods=['POST', 'GET'])
 def handle_missions():
 
     if request.method == 'POST':
@@ -292,7 +295,7 @@ def handle_missions():
         return jsonify(results)
 
 
-@app.route('/missions/<mission_id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/flsk/missions/<mission_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_mission(mission_id):
     mission = missions.query.get_or_404(mission_id)
 

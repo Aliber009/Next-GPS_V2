@@ -98,11 +98,11 @@ const MainToolbar = () => {
 
   const [openParc, setOpenParc] = useState(true);
 
-  const { REACT_APP_FLASK } = process.env
+  
 
   useEffectAsync(async () => {
     var miss = []
-    const resUser = await fetch(REACT_APP_FLASK+'/mission_users', { method: 'GET' })
+    const resUser = await fetch('/flsk/mission_users', { method: 'GET' })
     if (resUser.ok) {
       const jsonUser = await resUser.json();
       miss = jsonUser.filter(i => i.nameUser == ActualUser.name)

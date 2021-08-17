@@ -21,7 +21,7 @@ function createData(name, Mission, Accomplie) {
   return { name, Mission, Accomplie };
 }
 
-const { REACT_APP_FLASK } = process.env
+
 
 
 export default function BasicTable() {
@@ -31,13 +31,13 @@ export default function BasicTable() {
 
   useEffectAsync(async () => {
     
-    const resUser = await fetch(REACT_APP_FLASK+'/mission_users', { method: 'GET' })
+    const resUser = await fetch('/flsk/mission_users', { method: 'GET' })
     if (resUser.ok) {
       const jsonUser = await resUser.json();
       setmissionUser(jsonUser);
     }
 
-    const res = await fetch(REACT_APP_FLASK+'/missions', { method: 'GET' })
+    const res = await fetch('/flsk/missions', { method: 'GET' })
     if (res.ok) {
       const json = await res.json();
       setmission(json)

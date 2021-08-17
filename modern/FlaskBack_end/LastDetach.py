@@ -28,7 +28,7 @@ def __repr__(self):
     return f"<driver {self.Seqname}>"
 
 
-@app.route('/lastdetach', methods=['POST', 'GET'])
+@app.route('/flsk/lastdetach', methods=['POST', 'GET'])
 def handle_detach():
     if request.method == 'POST':
         if request.is_json:
@@ -56,7 +56,7 @@ def handle_detach():
         return jsonify(results)
 
 
-@app.route('/lastdetach/<seq_id>', methods=['PUT', 'DELETE'])
+@app.route('/flsk/lastdetach/<seq_id>', methods=['PUT', 'DELETE'])
 def handle_seq_user(seq_id):
     seq_user = lastdetach.query.get_or_404(seq_id)
     if request.method == 'PUT':

@@ -75,7 +75,7 @@ const PurpleSwitch = withStyles({
   checked: {},
   track: {},
 })(Switch);
-const { REACT_APP_FLASK } = process.env
+
 
 
 export default function SwitchListSecondary() {
@@ -96,7 +96,7 @@ export default function SwitchListSecondary() {
 
 
 
-    const resUser = await fetch(REACT_APP_FLASK + '/mission_users', { method: 'GET' })
+    const resUser = await fetch('/flsk/mission_users', { method: 'GET' })
     if (resUser.ok) {
       const jsonUser = await resUser.json();
       setmissionOfUsers(jsonUser)
@@ -105,7 +105,7 @@ export default function SwitchListSecondary() {
     }
 
 
-    const res = await fetch(REACT_APP_FLASK + '/missions', { method: 'GET' })
+    const res = await fetch('/flsk/missions', { method: 'GET' })
     if (res.ok) {
       const json = await res.json();
 
@@ -124,7 +124,7 @@ export default function SwitchListSecondary() {
 
 
   const switcher = (element) => {
-    fetch(REACT_APP_FLASK + '/mission_users/' + element.id, {
+    fetch('/flsk/mission_users/' + element.id, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(
@@ -136,12 +136,12 @@ export default function SwitchListSecondary() {
 
 
   const deleter = (element) => {
-    fetch(REACT_APP_FLASK + '/missions/' + element, { method: 'DELETE' })
+    fetch('/flsk/missions/' + element, { method: 'DELETE' })
       .then(response => response.json())
 
     missisonOfUsers.forEach(i => {
       if (i.missionID == element) {
-        fetch(REACT_APP_FLASK + '/mission_users/' + i.id, { method: 'DELETE' })
+        fetch('/flsk/mission_users/' + i.id, { method: 'DELETE' })
           .then(response => response.json)
       }
     })

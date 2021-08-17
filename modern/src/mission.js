@@ -39,7 +39,7 @@ const MenuProps = {
   'Kelly Snyder',
 ];
  */
-const { REACT_APP_FLASK } = process.env
+
 
 function getStyles(name, personName, theme) {
   return {
@@ -133,14 +133,14 @@ const Mission = () => {
         })
     }
     if (txt1 != '' && txt2 != '') {
-      const res = await fetch(REACT_APP_FLASK + '/missions', ops)
+      const res = await fetch('/flsk/missions', ops)
       const ids = await res.json()
       id = parseInt(ids.mission_id);
 
       /*  .then(data => id = parseInt(data.mission_id))
         */
     }
-    personName.forEach(item => fetch(REACT_APP_FLASK + '/mission_users', {
+    personName.forEach(item => fetch('/flsk/mission_users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ "nameUser": item, "missionID": id })

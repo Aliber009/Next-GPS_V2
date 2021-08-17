@@ -44,6 +44,8 @@ import CheckboxSelectionGrid from './checkSelection';
 import Checkout from './settings/driverFiche';
 import Image from './image';
 import SeqGroups from './settings/SeqGroups/SeqGroupsPage'
+import Tree from './tree';
+import SeqTree from './SeqTree';
 
 const App = () => {
   const initialized = useSelector(state => !!state.session.server && !!state.session.user);
@@ -66,7 +68,7 @@ const App = () => {
               <Route exact path='/settings/notifications' component={NotificationsPage} />
               <Route exact path='/settings/notification/:id?' component={NotificationPage} />
               <Route exact path='/settings/groups' component={GroupsPage} />
-              <Route exact path='/settings/groups-numero-sequence' component={SeqGroups} />
+              <Route exact path='/settings/groups-numero-sequence' component={SeqTree} />
               <Route exact path='/settings/group/:id?' component={GroupPage} />
               <Route exact path='/settings/drivers' component={DriversPage} />
               <Route exact path='/settings/driver/:id?' component={DriverPage} />

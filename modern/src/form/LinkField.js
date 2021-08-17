@@ -112,7 +112,7 @@ const checks=(name)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(
           {
-            ...driver,attributes:{...driver.attributes, creations:[...driver.attributes.creations || [], { carId: itemDevice[0].name, created:new Date().toLocaleDateString("fr-FR") }  ] }
+            ...driver,attributes:{...driver.attributes, creations:[...driver.attributes.creations || [], { carId: itemDevice[0].name, created:new Date().toString()}  ] }
           })
       })
       {opendialogue()}
@@ -132,7 +132,7 @@ const checks=(name)=>{
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(
             {
-              ...driver,attributes:{...driver.attributes, creations:[...driver.attributes.creations || [], { carId: itemDevice[0].name, created:new Date().toLocaleDateString("fr-FR") }  ] }
+              ...driver,attributes:{...driver.attributes, creations:[...driver.attributes.creations || [], { carId: itemDevice[0].name, created:new Date().toString()}  ] }
             })
         })
         {opendialogue()}
@@ -151,11 +151,11 @@ const checks=(name)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(
           {
-            ...driver,attributes:{...driver.attributes, destructions:[...driver.attributes.destructions || [],{ carId: itemDevice[0].name, removed:new Date().toLocaleDateString("fr-FR",{year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"}) } ] }
+            ...driver,attributes:{...driver.attributes, destructions:[...driver.attributes.destructions || [],{ carId: itemDevice[0].name, removed:new Date().toString()} ] }
           })
       })
 
-      await fetch('http://localhost:5000/lastdetach',{
+      await fetch('/flsk/lastdetach',{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(
@@ -185,7 +185,7 @@ const checks=(name)=>{
         body: JSON.stringify(createBody(added)),
       });
 
-      await fetch('http://localhost:5000/histoconductor',{
+      await fetch('/flsk/histoconductor',{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(
@@ -203,7 +203,7 @@ const checks=(name)=>{
         body: JSON.stringify(createBody(removed)),
       });
 
-      await fetch('http://localhost:5000/histoconductor',{
+      await fetch('/flsk/histoconductor',{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(

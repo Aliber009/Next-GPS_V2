@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const EditCollectionView = ({ content, editPath, endpoint, nameCode }) => {
+const EditCollectionView = ({ content, editPath, endpoint, loading }) => {
   const classes = useStyles();
   const history = useHistory();
 

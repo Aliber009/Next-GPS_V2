@@ -60,7 +60,7 @@ const StyledTableRow = withStyles((theme) => ({
 const DriversView = ({ updateTimestamp, onMenuClick }) => {
   const classes = useStyles();
   const [items, setItems] = useState([]);
-  
+  const [Itemcenter,setItemcenter] = useState([]);
   const [historyopen,sethistoryopen] = useState(false)
   const [itemstepper,setitemstepper] = useState("")
   const toggleDrawer = (open) => (event) => {
@@ -79,9 +79,32 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
       setItems(res);
     }
     setloading(true)
-
   }, [updateTimestamp]);
 
+  useEffectAsync(async()=>{
+    const response = await fetch('/flsk/histoEntite');
+    if (response.ok) {
+      const res =  await response.json()
+      setItemcenter(res); 
+    }
+  },[])
+
+  //find seq id entite
+
+  const findSeqEntite=(item)=>{
+    
+    var lisa=[]
+      for(var j=0;j<Itemcenter.length;j++)
+      {
+        if(item.id==Itemcenter[j].SeqId)
+        {
+          var d=new Date(Itemcenter[j].Date)
+          d.setHours(d.getHours()-1)
+          lisa.push({Centre:Itemcenter[j].Centre,date:d})
+        }
+      } 
+    return lisa
+  }
   
 
  // histoy by order of time 
@@ -93,12 +116,15 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
    var remoDataCSV=[]
    var datacsv=[["Clé sequentiel","Attaché à", "supprimé de ","Date" ]]
    var k=0;
-   var kk=0
+   var kk=0;
+   
    if(data){
+    const entite=findSeqEntite(data);
+    histo=entite;
     const attr=data.attributes
     if(attr.creations){
        attr.creations.forEach(i=>{
-         histocrea.push("Sequence ajoutée à la voiture : "+i.carId+" le "+i.created )
+         histocrea.push({ created:"Sequence ajoutée à la voiture : "+i.carId+" le "+i.created, date:i.created })
          creaDataCSV.push([data.name.substring(2),i.carId," ",i.created] )
 
         
@@ -106,7 +132,7 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
       }
     if(attr.destructions){
       attr.destructions.forEach(i=>{
-        histodest.push("Sequence supprimée de la voiture : "+i.carId+" le "+i.removed )
+        histodest.push({removed:"Sequence supprimée de la voiture : "+i.carId+" le "+i.removed,date:i.removed} )
         remoDataCSV.push([data.name.substring(2)," ",i.carId ,i.removed] )
       })
       }
@@ -115,26 +141,42 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
     for(var i=0;i<histocrea.length+histodest.length;i++){
      if(i%2==0){histo.push(histocrea[k]); datacsv.push(creaDataCSV[k]) ;k++}
      else if(i%2!=0){histo.push(histodest[kk]);datacsv.push(remoDataCSV[kk]);kk++}
-     
     }
     
-   
+    histo.sort((a,b)=>new Date(a.date)-new Date(b.date))
+    
+
    return [histo,datacsv]
  }
 //end of function
 
-//import function 
+// function soringify
+const x=(data)=>{
+  var lis=[];var headers=[]
+  data.forEach(
+    (i,j)=>{
+    if(i.created)
+    {
+    headers.push("Affectation Sequence-voiture")
+    lis.push(i.created)
+    }
+    else if (i.removed) { 
+      headers.push("Désaffectation Sequence-voiture")
+      lis.push(i.removed)
+    }
 
-
-
-
-
-//
+    else{
+       headers.push("Re/Affectation Sequence-Centre")
+       lis.push("Conducteur assigné au centre "+i.Centre+" Le "+i.date)
+      }
+ })
+ 
+ return [lis,headers]
+}
 
   return (
     <>
     {loading ?(
-      
     <div
     onClick={(event)=>{if(historyopen && event.target.className == "MuiBackdrop-root" ){sethistoryopen(false)}}}
     >
@@ -181,7 +223,7 @@ const DriversView = ({ updateTimestamp, onMenuClick }) => {
                </CSVLink>
                </StyledTableCell>  
                
-               <HistoryDrawer open={historyopen} list={<VerticalLinearStepper  data={parseJsonHistory(itemstepper)[0] || [] }  />} />
+               <HistoryDrawer open={historyopen} list={<VerticalLinearStepper  Sheaders={x(parseJsonHistory(itemstepper)[0])[1]} data={x(parseJsonHistory(itemstepper)[0])[0] || [] }  />} />
           </StyledTableRow>
           } 
           </>

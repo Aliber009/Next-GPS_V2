@@ -53,28 +53,12 @@ export default function VerticalLinearStepper(props) {
     var headers=[]
     if (props.source=="drivers"){
 
-      for(var i=0;i<titles.length;i++){
-        if(i%2==0)
-        {
-           headers.push("Affectation conducteur")
-        }
-        else
-        {
-            headers.push("Suppression d'affectation conducteur")
-        }
-     }
+       headers=props.headers
+    
     }
     else{
-    for(var i=0;i<titles.length;i++){
-        if(i%2==0)
-        {
-           headers.push("Creation Numero Sequentiel")
-        }
-        else
-        {
-            headers.push("Supression Numero Sequentiel")
-        }
-    }
+
+      headers=props.Sheaders
   }
          return headers
   }

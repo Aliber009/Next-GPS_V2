@@ -75,12 +75,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const {REACT_APP_FLASK}=process.env
 
 const Checkout=()=> {
 
 const [drId,setdrId]=useState({idrow:"",iddr:""})  
-const [item,setItem] = useState({Adresse:null,email:null,etat:null,pays:null,DateNaissance:null,contrat:null,permis:null,dateEntry:null,dateSotie:null})
+const [item,setItem] = useState({Adresse:null,email:null,etat:null,pays:null,DateNaissance:null,contrat:null,permis:null,dateEntry:null,dateSotie:null,files:null})
 const uploadedImage = React.useRef(null);
 const imageUploader = React.useRef(null);
 const [selectedDate, handleDateChange] = useState(new Date());
@@ -92,7 +91,7 @@ const[laoding, setloading] =useState(false)
 
 useEffectAsync(async()=>{
   
-  const r = await fetch(REACT_APP_FLASK+'/drivers')
+  const r = await fetch('/flsk/drivers')
   if(r.ok)
   {
     const res=await r.json()
@@ -157,21 +156,38 @@ const [sever,setsever] = useState({})
     }
   };
   const saveimage=async()=>{
-    await fetch(REACT_APP_FLASK+'/upload',{
+    await fetch('/flsk/upload',{
      method:'POST',
      body:formData
 
     })
   }
+  const [filenames,setfilenames]=useState([])
+  
+  const saveDocs=async()=>{
+    
+    for(var i=0; i<selected.length;i++){
+    var frmdata=new FormData()
+    frmdata.append("imag",selected[i])
+    frmdata.append("picName",selected[i].name)
+     await fetch('/flsk/upload',{
+      method:'POST',
+      body:frmdata
+      }
+     ) 
+    } 
+    
+  }
+  console.log(item)
 
   //end of image proce
   
   const classes = useStyles();
-  console.log(item)
+
 
    const saveData=async()=>{
      if(drId.iddr==id ){
-   const req=await fetch(REACT_APP_FLASK+'/drivers/'+drId.idrow,{method:"PUT",
+   const req=await fetch('/flsk/drivers/'+drId.idrow,{method:"PUT",
    headers: { 'Content-Type': 'application/json' },
    body: JSON.stringify(item)
       })
@@ -187,7 +203,7 @@ const [sever,setsever] = useState({})
       } 
     }
     else{
-      const req=await fetch(REACT_APP_FLASK+'/drivers',{method:"POST",
+      const req=await fetch('/flsk/drivers',{method:"POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(item)
       })
@@ -204,6 +220,40 @@ const [sever,setsever] = useState({})
     
     } 
   } 
+  //Save centre Affectation 
+  /* const savecenter=async()=>{
+    if(drId.iddr==id ) {   
+    await fetch('/flsk/histoconductor',{
+      method:"PUT",
+      headers: { 'Content-Type': 'application/json' },
+      body:JSON.stringify({
+      added:null,
+      removed:null,
+      driverId:id,
+      CarId:null,
+      CentreAffect:item.CentreAffectation,
+      
+      })
+
+    })
+  }
+  else{
+    await fetch('/flsk/histoconductor',{
+      method:"POST",
+      headers: { 'Content-Type': 'application/json' },
+      body:JSON.stringify({
+      added:null,
+      removed:null,
+      driverId:id,
+      CarId:null,
+      CentreAffect:item.CentreAffectation,
+      
+      })
+
+    })
+  }
+
+  } */
   
 
   return (
@@ -423,7 +473,14 @@ const [sever,setsever] = useState({})
             type="file"
             multiple
             accept="image/png, image/jpeg, application/pdf, application/msword"
-            onChange={(e)=>setselected([...e.target.files])}
+            onChange={(e)=>{const x=[...e.target.files] ;setselected(x);
+               setItem(
+                 ()=>{
+                   var lis=[];
+                   x.forEach(i=>lis.push(i.name))
+                   return {...item,files:lis}
+                  })
+              }}
              />
           <Button
             className="btn-choose"
@@ -434,18 +491,18 @@ const [sever,setsever] = useState({})
         </label>
         </Grid>
         <div style={{marginLeft:"12px"}}>
-        {selected.length>0 &&
+        {(item.files || selected).length>0 &&
         <>
         <Typography variant="body2" className="list-header">
           List of Files :
           </Typography>
         <ul className="list-group">
           
-            {selected.map((file, index) => (
+            {(item.files || selected).map((file, index) => (
               <ListItem
                 divider
                 key={index}>
-                <a href={file.url}>{file.name}</a>
+                <a href={file || file.url}>{file || file.name}</a>
               </ListItem>
             ))}
         </ul>
@@ -459,7 +516,7 @@ const [sever,setsever] = useState({})
            variant="contained" 
            color='primary'
            className={classes.button}
-           onClick={()=>{saveimage();saveData()}} 
+           onClick={()=>{saveimage();saveDocs();saveData()}} 
             >
                      Enregistrer
                     </Button>

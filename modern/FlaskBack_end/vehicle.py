@@ -46,7 +46,7 @@ def __repr__(self):
     return f"<driver {self.name}>"
 
 
-@app.route('/drivers', methods=['POST', 'GET'])
+@app.route('/flsk/drivers', methods=['POST', 'GET'])
 def handle_drivers():
     if request.method == 'POST':
         if request.is_json:
@@ -102,7 +102,7 @@ def handle_drivers():
         return jsonify(results)
 
 
-@app.route('/drivers/<driver_id>', methods=['PUT', 'DELETE','GET'])
+@app.route('/flsk/drivers/<driver_id>', methods=['PUT', 'DELETE','GET'])
 def handle_drivers_user(driver_id):
     driver_user = drivers.query.get_or_404(driver_id)
     if request.method== 'GET':

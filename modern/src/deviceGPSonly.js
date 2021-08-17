@@ -30,10 +30,13 @@ import GetAppOutlinedIcon from '@material-ui/icons/GetAppOutlined';
 import SwapCallsOutlinedIcon from '@material-ui/icons/SwapCallsOutlined';
 import PauseIcon from '@material-ui/icons/Pause';
 import { Button } from '@material-ui/core';
-import { formatHours } from './common/formatter';
+import { formatHours,formatSpeed } from './common/formatter';
 import ReplayPathMap from './map/ReplayPathMap';
 import ReportFilter from './reports/ReportFilter';
 import moment from 'moment';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
+
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -71,10 +74,9 @@ const DeviceView = ({ deviceId,updateTimestamp, onMenuClick }) => {
 
 
   const [lasts,setlasts] =useState([{name:""}])
-  const { REACT_APP_FLASK } = process.env
-
+  
 useEffectAsync(async()=>{
-  const res=await fetch(REACT_APP_FLASK+'/lastdetach')
+  const res=await fetch('/flsk/lastdetach')
   if(res.ok){
      setlasts(await res.json())
   }
@@ -112,7 +114,7 @@ useEffectAsync(async()=>{
 
   function findspeed(item){
     var text="0"
-    position.forEach(i=>{if(i.deviceId==item.id){text=i.speed}})
+    position.forEach(i=>{if(i.deviceId==item.id){text=formatSpeed(i.speed,"kmh")}})
     return text
   }
 
@@ -121,6 +123,24 @@ useEffectAsync(async()=>{
     position.forEach(i=>{if(i.deviceId==item.id){text=i.attributes.totalDistance}})
     return text
   }
+  const findstateMotor=(item)=>{
+    var ignit=false
+    var motion=false
+    var text=""
+    var colo="#808080"
+    position.forEach(i=>{if(i.deviceId==item.id){ignit=i.attributes.ignition;motion=i.attributes.motion}})
+    if(ignit & motion){text="voiture démarrée en mouvement";colo="#50CB93"}
+    else if(ignit & !motion){text="voiture démarrée et pas en mouvement";colo="#FFD523"}
+    else if(!ignit){text="voiture n'est pas démarrée"}
+    return [text,colo]
+  }
+  const findfuel=(item)=>{
+    var fuel=""
+    position.forEach(i=>{if(i.deviceId==item.id){fuel=i.attributes.io84/10}})
+    return fuel
+
+  }
+
   
   //get adress
   const [adress,setadress]=useState("")
@@ -166,11 +186,13 @@ useEffectAsync(async()=>{
 
   
   //ignit function
-  const colorignit=(i)=>{
-    var col=""
-    if(i.status=="online"){col="green"}
-    else if(i.status=="unknown"){col= "#FF7600"}
-    return col
+  const colorignit=(item)=>{
+    var stat=""
+    position.forEach(i=>{if(i.deviceId==item.id){stat=i.attributes.gpsStatus}})
+    var col="";var title="Gps Deconnecté"
+    if(stat=="1"){col="green";title="Gps Connecté"}
+    //else if(i.status=="unknown"){col= "#FF7600"}
+    return [col,title]
   }
 
   const [rows, setRows] = useState([]);
@@ -226,18 +248,23 @@ const cancelSearch = () => {
   
    //last replay
    const [positions, setPositions] = useState([]);
-   const [replay, setreplay] = useState(false);
    const [index, setIndex] = useState(0);
    const handleSubmit = async (deviceId, from, to, _, headers) => {
-     const query = new URLSearchParams({ deviceId, from, to });
-     const response = await fetch(`/api/positions?${query.toString()}`, { Accept: 'application/json' });
-     if (response.ok) {
-       setIndex(0);
-       setPositions(await response.json());
-     }
-     setreplay(false)
-   };
+    //const query = new URLSearchParams({ deviceId, from, to });
+    const response = await fetch('/api/positions?deviceId='+deviceId+'&from='+from+'&to='+to, { Accept: 'application/json' });
+    if (response.ok) {
+      setIndex(0);
+      setPositions(await response.json());  
+    } 
+  };
  
+   const showtraj=(item)=>{
+    return(
+          <div style={{display:"none"}} >
+            <ReportFilter handleSubmit={handleSubmit(item.id,moment().startOf('day').toISOString(),moment().endOf('day').toISOString())} showOnly />
+            </div>
+    )
+  }
    //end of last replay 
 
   
@@ -266,6 +293,13 @@ const cancelSearch = () => {
         <Fragment key={item.id}>
          {!xx[item.id] &&
           <>
+          
+            <Tooltip title={colorignit(item)[1]} arrow>
+            <IconButton style={{marginLeft:-5, width:"20px",height:"20px"}}>
+            <FiberManualRecordIcon
+            style={{fill: `${colorignit(item)[0]}`, width:"20px",height:"20px"}}/>
+            </IconButton>
+            </Tooltip>
         
           <ListItem button key={item.id} onClick={() => dispatch(devicesActions.select(item))}>
             <ListItemAvatar>
@@ -303,13 +337,13 @@ const cancelSearch = () => {
         
         </Tooltip>
         <div  >
-            <Tooltip title={item.status} arrow>
+        <Tooltip title={findstateMotor(item)[0]} arrow>
             <IconButton style={{marginLeft:-5, width:"20px",height:"20px"}}>
-            <WifiIcon
-            style={{fill: `${colorignit(item)}`, width:"20px",height:"20px"}}/>
+            <VpnKeyIcon
+            style={{fill: `${findstateMotor(item)[1]}`, width:"20px",height:"20px"}}/>
             </IconButton>
             </Tooltip>
-            <Tooltip title={"Vitesse: " +findspeed(item)+" Km"} arrow>
+            <Tooltip title={"Vitesse: " +findspeed(item)} arrow>
             <IconButton  style={{marginLeft:17, width:"20px",height:"20px"}}>
             <SpeedIcon color="primary" style={{width:"20px",height:"20px"}} />
             </IconButton>
@@ -319,22 +353,18 @@ const cancelSearch = () => {
              <HeightIcon color="primary" style={{width:"20px",height:"20px"}} />
              </IconButton>
              </Tooltip>
-             <Tooltip title={"Carburant: " } arrow>
+             <Tooltip title={"Carburant: "+findfuel(item)} arrow>
              <IconButton  style={{marginLeft:15, width:"20px",height:"20px"}}>
             <LocalGasStationIcon color="primary" style={{width:"20px",height:"20px"}}  /> 
             </IconButton>
             </Tooltip>
             <Tooltip  title={"afficher dernier trajet"} arrow>
-            <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>setreplay(true)} >
+            <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>showtraj(item)} >
             <SwapCallsOutlinedIcon color="primary" style={{width:"20px",height:"20px"}} /> 
             </IconButton>
             </Tooltip>
             <ReplayPathMap positions={positions} />
-            { replay &&  
-            <div style={{display:"none"}} >
-            <ReportFilter handleSubmit={handleSubmit(item.id,moment().startOf('day').toISOString(),moment().endOf('day').toISOString())} showOnly />
-            </div>
-             }
+          
             <Tooltip onOpen={()=>showStop(item.id)} title={
             <>{loadstop?(<CircularProgress style={{color:"#FFFF"}} size="25px" />):(stop!=""? "Dernier Stop enregistré : "+stop :"Donnée indisponible" )} </>
             }

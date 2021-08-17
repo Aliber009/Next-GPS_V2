@@ -26,7 +26,7 @@ def __repr__(self):
     return f"<pic{self.picName}>"
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/flsk/upload', methods=['POST'])
 def upload_file():
 
     name=request.form.get("picName")

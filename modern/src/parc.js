@@ -18,7 +18,7 @@ const useStyles = makeStyles({
     maxWidth: 345,
   },
 });
-const { REACT_APP_FLASK } = process.env
+
 
 export default function Parc() {
   const classes = useStyles();

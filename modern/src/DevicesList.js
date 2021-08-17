@@ -29,11 +29,14 @@ import { useState,useEffect } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReplayPathMap from './map/ReplayPathMap';
 import PauseIcon from '@material-ui/icons/Pause';
-
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import ReportFilter from './reports/ReportFilter';
 import moment from 'moment';
 import SwapCallsOutlinedIcon from '@material-ui/icons/SwapCallsOutlined';
 import { formatHours } from './common/formatter';
+import { formatSpeed } from './common/formatter';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
+
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -94,7 +97,7 @@ const [laoding,setloading]=useState(false)
 
   function findspeed(item){
     var text="0"
-    position.forEach(i=>{if(i.deviceId==item.id){text=i.speed}})
+    position.forEach(i=>{if(i.deviceId==item.id){text=formatSpeed(i.speed,'kmh')}})
     return text
   }
 
@@ -120,16 +123,36 @@ const [laoding,setloading]=useState(false)
   //end of popever section
   
   //ignit function
-  const colorignit=(i)=>{
-    var col=""
-    if(i.status=="online"){col="green"}
-    else if(i.status=="unknown"){col= "#FF7600"}
-    return col
+  const colorignit=(item)=>{
+    var stat=""
+    position.forEach(i=>{if(i.deviceId==item.id){stat=i.attributes.gpsStatus}})
+    var col="";var title="Gps Deconnecté"
+    if(stat=="1"){col="green";title="Gps Connecté"}
+    //else if(i.status=="unknown"){col= "#FF7600"}
+    return [col,title]
   }
 
   const [rows, setRows] = useState([]);
   const [constantItems,setconst] =useState([])
-  
+
+  const findstateMotor=(item)=>{
+    var ignit=false
+    var motion=false
+    var text=""
+    var colo="#808080"
+    position.forEach(i=>{if(i.deviceId==item.id){ignit=i.attributes.ignition;motion=i.attributes.motion}})
+    if(ignit & motion){text="voiture démarrée en mouvement";colo="#50CB93"}
+    else if(ignit & !motion){text="voiture démarrée et pas en mouvement";colo="#FFD523"}
+    else if(!ignit){text="voiture n'est pas démarrée"}
+    return [text,colo]
+  }
+
+  const findfuel=(item)=>{
+    var fuel=""
+    position.forEach(i=>{if(i.deviceId==item.id){fuel=i.attributes.io84/10}})
+    return fuel
+
+  }
 
   
   const [xx,setxx]=useState({})
@@ -173,17 +196,23 @@ const cancelSearch = () => {
 
   //last replay
   const [positions, setPositions] = useState([]);
-  const [replay, setreplay] = useState(false);
   const [index, setIndex] = useState(0);
   const handleSubmit = async (deviceId, from, to, _, headers) => {
-    const query = new URLSearchParams({ deviceId, from, to });
-    const response = await fetch(`/api/positions?${query.toString()}`, { Accept: 'application/json' });
+    //const query = new URLSearchParams({ deviceId, from, to });
+    const response = await fetch('/api/positions?deviceId='+deviceId+'&from='+from+'&to='+to, { Accept: 'application/json' });
     if (response.ok) {
       setIndex(0);
-      setPositions(await response.json());
+      setPositions(await response.json());  
     }
-    setreplay(false)
   };
+
+  const showtraj=(item)=>{
+    return(
+          <div style={{display:"none"}} >
+            <ReportFilter handleSubmit={handleSubmit(item.id,moment().startOf('day').toISOString(),moment().endOf('day').toISOString())} showOnly />
+            </div>
+    )
+  }
 
   //end of last replay 
 
@@ -247,7 +276,12 @@ const cancelSearch = () => {
          {xx[item.id] != undefined &&
           <>
            
-       
+           <Tooltip title={colorignit(item)[1]} arrow>
+            <IconButton style={{marginLeft:-5, width:"20px",height:"20px"}}>
+            <FiberManualRecordIcon
+            style={{fill: `${colorignit(item)[0]}`, width:"20px",height:"20px"}}/>
+            </IconButton>
+            </Tooltip>
 
           
           
@@ -283,13 +317,14 @@ const cancelSearch = () => {
             size="small"
             label="№ sequentiel"
         />
-            <Tooltip title={item.status} arrow>
+             <Tooltip title={findstateMotor(item)[0]} arrow>
             <IconButton style={{marginLeft:-5, width:"20px",height:"20px"}}>
-            <WifiIcon
-            style={{fill: `${colorignit(item)}`, width:"20px",height:"20px"}}/>
+            <VpnKeyIcon
+            style={{fill: `${findstateMotor(item)[1]}`, width:"20px",height:"20px"}}/>
             </IconButton>
             </Tooltip>
-            <Tooltip title={"Vitesse: " +findspeed(item)+" Km"} arrow>
+            
+            <Tooltip title={"Vitesse: " +findspeed(item)} arrow>
             <IconButton  style={{marginLeft:17, width:"20px",height:"20px"}}>
             <SpeedIcon color="primary" style={{width:"20px",height:"20px"}} />
             </IconButton>
@@ -299,13 +334,13 @@ const cancelSearch = () => {
              <HeightIcon color="primary" style={{width:"20px",height:"20px"}} />
              </IconButton>
              </Tooltip>
-             <Tooltip title={"Carburant: " } arrow>
+             <Tooltip title={"Carburant: "+findfuel(item) } arrow>
              <IconButton  style={{marginLeft:15, width:"20px",height:"20px"}}>
             <LocalGasStationIcon color="primary" style={{width:"20px",height:"20px"}}  /> 
             </IconButton>
             </Tooltip>
             <Tooltip  title={"afficher dernier trajet"} arrow>
-            <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>setreplay(true)} >
+            <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>showtraj(item)} >
             <SwapCallsOutlinedIcon color="primary" style={{width:"20px",height:"20px"}} /> 
             </IconButton>
             </Tooltip>
@@ -321,13 +356,8 @@ const cancelSearch = () => {
               </span>
               </Tooltip>
             <ReplayPathMap positions={positions} />
-            { replay &&  
-            <div style={{display:"none"}} >
-              
-        
-            <ReportFilter handleSubmit={handleSubmit(item.id,moment().startOf('day').toISOString(),moment().endOf('day').toISOString())} showOnly />
-            </div>
-             }
+            
+             
             {/* <Tooltip title={"Ajouter Facture"} arrow>
             <IconButton  style={{marginLeft:18, width:"20px",height:"20px"}} onClick={()=>history.push('/cout/'+item.id)} >
             <AttachMoneyIcon color="primary" style={{width:"20px",height:"20px"}} /> 

@@ -38,7 +38,7 @@ const names = [
   'Maintenance',
   'Infraction routiere'
 ];
-const { REACT_APP_FLASK } = process.env
+
 
 function getStyles(name, personName, theme) {
   return {
@@ -129,7 +129,7 @@ const Cost = () => {
           "Somme": somme
         })
     }
-    fetch(REACT_APP_FLASK + '/costs', ops)
+    fetch('/flsk/costs', ops)
       .then(response => response.json())
 
   }

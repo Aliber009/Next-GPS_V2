@@ -30,7 +30,7 @@ def __repr__(self):
     return f"<driver {self.driverId}>"
 
 
-@app.route('/histoconductor', methods=['POST', 'GET'])
+@app.route('/flsk/histoconductor', methods=['POST', 'GET'])
 def handle_histo():
     if request.method == 'POST':
         if request.is_json:
@@ -59,7 +59,7 @@ def handle_histo():
         return jsonify(results)
 
 
-@app.route('/histoconductor/<drive_id>', methods=['PUT', 'DELETE'])
+@app.route('/flsk/histoconductor/<drive_id>', methods=['PUT', 'DELETE'])
 def handle_drive_user(drive_id):
     drive_user = histoConductor.query.get_or_404(drive_id)
     if request.method == 'PUT':

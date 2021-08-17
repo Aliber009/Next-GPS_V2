@@ -1,7 +1,7 @@
 from app import db,app
 from flask import Flask, request, jsonify
 import json
-
+from sqlalchemy.dialects import postgresql
 
 class drivers(db.Model):
 
@@ -22,9 +22,10 @@ class drivers(db.Model):
     permis = db.Column(db.String(100))
     DateNaissance = db.Column(db.String(100))
     CentreAffectation = db.Column(db.String(100))
+    files = db.Column(postgresql.ARRAY(db.String()))
 
 
-def __init__(self, driverId, name, lastname, etat, Adresse, email, ville, phone, pays, contrat, dateEntry, dateSotie, fonction, permis, DateNaissance, CentreAffectation):
+def __init__(self, driverId, name, lastname, etat, Adresse, email, ville, phone, pays, contrat, dateEntry, dateSotie, fonction, permis, DateNaissance, CentreAffectation, files):
     self.name = name
     self.driverId = driverId
     self.lastname = lastname
@@ -41,13 +42,14 @@ def __init__(self, driverId, name, lastname, etat, Adresse, email, ville, phone,
     self.permis = permis
     self.DateNaissance = DateNaissance
     self.CentreAffectation = CentreAffectation
+    self.files=files
 
 
 def __repr__(self):
     return f"<driver {self.name}>"
 
 
-@app.route('/drivers', methods=['POST', 'GET'])
+@app.route('/flsk/drivers', methods=['POST', 'GET'])
 def handle_drivers():
     if request.method == 'POST':
         if request.is_json:
@@ -68,7 +70,8 @@ def handle_drivers():
                 fonction=data['fonction'],
                 permis=data['permis'],
                 DateNaissance=data['DateNaissance'],
-                CentreAffectation=data['CentreAffectation']
+                CentreAffectation=data['CentreAffectation'],
+                files=data['files']
             )
 
             db.session.add(new_driver)
@@ -97,13 +100,14 @@ def handle_drivers():
                 "fonction": driver.fonction,
                 "permis": driver.permis,
                 "DateNaissance": driver.DateNaissance,
-                "CentreAffectation": driver.CentreAffectation
+                "CentreAffectation": driver.CentreAffectation,
+                "files":driver.files
 
             } for driver in Drivers]
         return jsonify(results)
 
 
-@app.route('/drivers/<driver_id>', methods=['PUT', 'DELETE','GET'])
+@app.route('/flsk/drivers/<driver_id>', methods=['PUT', 'DELETE','GET'])
 def handle_drivers_user(driver_id):
     driver_user = drivers.query.get_or_404(driver_id)
     if request.method== 'GET':
@@ -124,7 +128,8 @@ def handle_drivers_user(driver_id):
                 "fonction": driver_user.fonction,
                 "permis": driver_user.permis,
                 "DateNaissance": driver_user.DateNaissance,
-                "CentreAffectation": driver_user.CentreAffectation
+                "CentreAffectation": driver_user.CentreAffectation,
+                "files":driver_user.files
             }
         return jsonify(result)    
 
@@ -145,6 +150,7 @@ def handle_drivers_user(driver_id):
         driver_user.permis = data['permis']
         driver_user.DateNaissance = data['DateNaissance']
         driver_user.CentreAffectation = data['CentreAffectation']
+        driver_user.files=data['files']
 
         # cost_user.DeviceID=data['DeviceID']
         #mission_user.missionID = data['missionID']
