@@ -10,7 +10,7 @@
         tileSize: 256,
       },
     },
-    glyphs: "https://cdn.traccar.com/map/fonts/{fontstack}/{range}.pbf",
+    glyphs: "httpbn s://cdn.traccar.com/map/fonts/{fontstack}/{range}.pbf",
     layers: [{
       id: 'osm',
       type: 'raster',
@@ -19,9 +19,10 @@
   });
   
   export const styleOsm = () => styleCustom(
+      //"https://mts0.google.com/vt/lyrs=m@289000001&hl=en&src=app&x={x}&y={y}&z={z}&s=Gal",
      "https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", 
-     //"https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?apiKey=dThtW9Vcohb8nFqAJkmjPEwWtsD1PlQZXbu5mqXAiFA",
-    '© <a target="_top" rel="noopener" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+     //"https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?apiKey=jab0Ntex6UOajMfdGw1Z9P4sLbfqsfBGQ6UQ6_4NKps",
+    '© <a target="_top" rel="noopener" href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors',
   );
   
   export const styleCarto = () => ({

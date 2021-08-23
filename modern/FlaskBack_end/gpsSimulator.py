@@ -4,14 +4,19 @@ import urllib
 import http.client
 import time
 import random
+#from mqgps import waypoint
 
-id = '000012'
+id = '869170034060997'
 server = 'localhost:5055'
 period = 1
 step = 0.001
 device_speed = 30
 driver_id = '22333'
 """ waypoints = [(33.5432254, -7.6406825), (33.54322565, -7.6406824)] """
+
+
+
+
 
 waypoints = [
 
@@ -81,7 +86,7 @@ waypoints = [
     (33.449427, -7.642686), (33.449391, -7.642628), (33.449391, -7.642613),
 
 ]
-
+ 
 points = []
 
 for i in range(0, len(waypoints)):

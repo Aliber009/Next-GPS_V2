@@ -1,7 +1,7 @@
 
 import React from 'react';
-import Directions from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
-import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
+//import Directions from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
+//import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css'
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import theme from '@mapbox/mapbox-gl-draw/src/lib/theme';
 import { map } from './Map';
@@ -9,7 +9,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import {useState,useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import 'font-awesome/css/font-awesome.min.css';
+//import 'font-awesome/css/font-awesome.min.css';
 import {
   CircleMode,
   DragCircleMode,
@@ -151,11 +151,11 @@ var drawBar = new extendDrawBar({
     }
   ] 
 }); 
-const directions = new Directions({
+/* const directions = new Directions({
   accessToken: "pk.eyJ1IjoiYWxpYmVybzAwOSIsImEiOiJja240ZGZvcngwNXBqMndvZnF1MThjZHVnIn0.3HjoQt279wR8tla2b2OHiA",
   unit: 'metric',
   profile: 'mapbox/cycling'
-});
+}); */
 var n=new Map();
   const GeofenceEditMap = () => {
   const dispatch = useDispatch();
@@ -173,7 +173,7 @@ var n=new Map();
   useEffect(() => {
     map.addControl(drawBar, 'top-left');
     //map.addControl(directions,'bottom-right');
-    console.log(directions.getDestination())
+    //console.log(directions.getDestination())
     return () => map.removeControl(drawBar);
   }, []);
    

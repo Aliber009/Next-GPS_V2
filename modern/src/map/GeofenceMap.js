@@ -67,7 +67,9 @@ const GeofenceMap = (props) => {
       map.removeLayer('geofences-fill');
       map.removeLayer('geofences-line');
       map.removeLayer('geofences-title');
+      if(map.getSource(id)){
       map.removeSource(id);
+      }
     };
   }, []);
 

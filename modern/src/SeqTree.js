@@ -10,13 +10,6 @@ const SeqTree=()=>{
 
   const [dataStr,setdataStr]=useState([])
 
- /* async function fetchdatat(){
-    const res= await fetch('/flsk/entites',{method:"GET"})
-    if(res.ok){const respo = await res.json(); data=respo[0].arr}
-    
-    
-    return data
-  } */
   const x=()=>{
     var a=[{name:"casa"}]
     return a 

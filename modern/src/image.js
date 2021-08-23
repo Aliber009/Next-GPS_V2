@@ -1,12 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import axios from 'axios';
-import ChangeHistoryOutlinedIcon from '@material-ui/icons/ChangeHistoryOutlined';
-import 'font-awesome/css/font-awesome.min.css';
+//import 'font-awesome/css/font-awesome.min.css';
 import { Card,Button } from '@material-ui/core';
 
 

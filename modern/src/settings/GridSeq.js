@@ -302,20 +302,66 @@ const [show,setshow]=useState([])
   );
 }
 
-const DriversPage = () => {
+const GridSeq = () => {
   const classes = useStyles();
+  const [loading,setloading]=useState(true)
+  //feedback
+  const [open, setOpen] = React.useState(false);
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
   //end of feedback
 
- 
+  const importCSV=async(data)=>{
+    
+    for (var i=1;i<data.length;i++)
+    {
+     setloading(false)
+     const res = await fetch('api/drivers',{
+      method:"POST",
+      headers: { 'Content-Type': 'application/json' },
+      body:JSON.stringify({
+          name:"S*"+data[i][0],
+          uniqueId:data[i][1],
+          attributes:{}
+        })
+      })
+      if(!res.ok)
+      {
+        setOpen(true)
+      }
+    }
+    setloading(true)
+  }
   return (
     <>
       <MainToolbar />
-      
+      {loading?(<>
       <EditCollectionView content={DriversView} editPath="/settings/driver" endpoint="drivers" />
-      
+      <Button className={classes.fab} variant="outlined" >
+      <div style={{ height: 'fit-content' ,position: "absolute" ,left: "0px",top: "0px" ,zIndex: 1,opacity:0}}>
+          <CSVReader  onFileLoaded={(data) => importCSV(data)} />
+      </div>
+       Importer depuis fichier Excel
+     </Button>
+     </>
+      ):(<LinearProgress />)}
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+     <Alert onClose={handleClose} severity="warning">
+      Un ou plusieur numéro Sequentiels ne peut étre importé!
+      </Alert>
+     </Snackbar>
     </>
   );
 }
 
-export default DriversPage;
+export default GridSeq;

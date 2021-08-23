@@ -46,6 +46,7 @@ import Image from './image';
 import SeqGroups from './settings/SeqGroups/SeqGroupsPage'
 import Tree from './tree';
 import SeqTree from './SeqTree';
+import GridSeq from './settings/GridSeq';
 
 const App = () => {
   const initialized = useSelector(state => !!state.session.server && !!state.session.user);
@@ -98,6 +99,7 @@ const App = () => {
               <Route exact path='/settings/fiches/:id?' component={Checkout} />
               <Route exact path='/image' component={Image} />
               <Route exact path='/dashboard' component={DashboardPage} />
+              <Route exact path='/gridseq' component={GridSeq} />
             </Switch>
           )}
         </Route>
