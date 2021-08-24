@@ -10,7 +10,7 @@
         tileSize: 256,
       },
     },
-    glyphs: "httpbn s://cdn.traccar.com/map/fonts/{fontstack}/{range}.pbf",
+    glyphs: "https://cdn.traccar.com/map/fonts/{fontstack}/{range}.pbf",
     layers: [{
       id: 'osm',
       type: 'raster',
