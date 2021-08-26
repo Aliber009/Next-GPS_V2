@@ -50,8 +50,8 @@ export default function CheckboxSelectionGrid(props) {
         checkboxSelection
         disableSelectionOnClick
         onSelectionModelChange={(newSelection) => {
-          setSelectionModel(newSelection.selectionModel);
-          props.model(idtoname(newSelection.selectionModel))
+          setSelectionModel(newSelection);
+          props.model(idtoname(newSelection))
         }}
         selectionModel={selectionModel}
       />
