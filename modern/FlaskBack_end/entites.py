@@ -37,6 +37,12 @@ def handle_entites():
          return jsonify(results)
 @app.route('/flsk/entites/<entite_id>', methods=['PUT'])
 def handle_entite_user(entite_id):
+    if(entites.query.all() == []) :
+        data = request.get_json()
+        new_entite = entites(arr=data['arr'])
+        db.session.add(new_entite)
+        db.session.commit()
+        return {"message": f"entite has been created successfully."}
     entite_user = entites.query.get_or_404(entite_id)
     if request.method == 'PUT':
         data = request.get_json()

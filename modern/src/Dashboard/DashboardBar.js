@@ -11,39 +11,8 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-function DashboardBar({ description }) {
+function DashboardBar({ description, data }) {
     const classes = useStyles();
-
-    const data = [
-        {
-          name: 'CAR 1',
-          km: 2400,
-        },
-        {
-          name: 'CAR 2',
-          km: 1398,
-        },
-        {
-          name: 'CAR 3',
-          km: 9800,
-        },
-        {
-          name: 'CAR 4',
-          km: 3908,
-        },
-        {
-          name: 'CAR 5',
-          km: 1890,
-        },
-        {
-          name: 'CAR 6',
-          km: 2500,
-        },
-        {
-          name: 'CAR 7',
-          km: 2100,
-        },
-      ];
 
     return (
         <div className={classes.dashboard}>
@@ -51,7 +20,7 @@ function DashboardBar({ description }) {
             <BarChart
                 layout='vertical'
             width={450}
-            height={270}
+            height={290}
             data={data}
             margin={{
                 top: 5,

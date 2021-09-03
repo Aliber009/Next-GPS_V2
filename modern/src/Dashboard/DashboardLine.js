@@ -49,7 +49,7 @@ function DashboardLine() {
           car3: getRandomInt(100)
         },
       ];
-
+      
     return (
         <div className={classes.dashboard}>
           <div className={classes.dashboardDescription}>Carubrant consommé par capteur de niveau de carburant(FLS)</div>

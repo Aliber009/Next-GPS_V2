@@ -7,13 +7,15 @@ import ReportToPrint from './ReportsToPrint'
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 
-const ReportFilter = ({ children, handleSubmit, showOnly, handleSubmittoday }) => {
+const ReportFilter = ({ handleSubmit,setfilterDate }) => {
   const devices = useSelector(state => Object.values(state.devices.items));
   const [deviceId, setDeviceId] = useState();
   const [period, setPeriod] = useState('today');
   const [from, setFrom] = useState(moment().subtract(1, 'hour'));
   const [to, setTo] = useState(moment());
-
+  useEffect(()=>{
+    setfilterDate(prev =>{prev[0].from = from;prev[0].to = to;prev[0].period = period;return [...prev]})
+  },[from,to,period])
   const handleClick = (mail, json) => {
     let selectedFrom;
     let selectedTo;
@@ -58,6 +60,8 @@ const ReportFilter = ({ children, handleSubmit, showOnly, handleSubmittoday }) =
     );
     
   }
+
+  
   
   return (
     <>
@@ -97,11 +101,12 @@ const ReportFilter = ({ children, handleSubmit, showOnly, handleSubmittoday }) =
   );
 }
 
-const Filter = ({ setItems, report }) => {
+const Filter = ({ setItems, report,setfilterDate }) => {
 
   const [daily, setDaily] = useState(false);
 
   const handleSubmit = async (deviceId, from, to, mail, headers) => {
+
     const query = new URLSearchParams({ deviceId, from, to, daily, mail });
     const response = await fetch(`/api/reports/summary?${query.toString()}`, { headers });
     if (response.ok) {
@@ -117,27 +122,73 @@ const Filter = ({ setItems, report }) => {
   }
 
   return (
-    <ReportFilter handleSubmit={handleSubmit}>
+    <ReportFilter handleSubmit={handleSubmit} setfilterDate={setfilterDate}>
     </ReportFilter>
   );
 }
 
-const ReportPrintFilter = ({ setReport, report, dateFilter }) => {
+
+
+const ReportPrintFilter = ({ setReport, report, dateFilter ,filterDate,setlistAllFilters}) => {
   const [seq, setSeq] = useState([])
-  const [groups, setGroups] = useState([])
+
+  const [listEntities,setListEntities] =useState([])
+  const [nodes,setNodes] =useState([])
+  const [listFilters,setListFilters] =useState([{seqNumber:"",entitie:"",from:"",to:"",period:"today"}])
+  async function  loadEntities() {
+    const response = await fetch('/flsk/entites');
+    if (response.ok) {
+      const res =  await response.json()
+      if( res.length === 0 ){setNodes(initializedСopy(res));}
+      else if( res.length > 0) {setNodes(initializedСopy(res[0].arr));}     
+    }
+  }
+
+
+  useEffect(()=>{
+    setListFilters(prev => {prev[0].from = filterDate[0].from;prev[0].to = filterDate[0].to;prev[0].period = filterDate[0].period; return [...prev]})
+  },[filterDate])
+
+  useEffect(()=>{
+    setlistAllFilters(listFilters)
+  },[listFilters])
+
+  const initializedСopy = (nodes, location) => {
+    const nodesCopy = [];
+    for (let i = 0; i < nodes.length; i++) {
+        const { children, name,seqAttribut } = nodes[i];
+        const hasChildren = children !== undefined;
+        const id = location ? `${location}.${i + 1}` : `${i + 1}`;
+        if(seqAttribut == true){
+            nodesCopy[i] = { 
+                children: hasChildren ? initializedСopy(children, id) : undefined,
+                id:id,
+                name,
+                seqAttribut : seqAttribut
+            };
+            
+            //setLoading((loading) => !loading)
+        }else if(seqAttribut == undefined){
+            nodesCopy[i] = { 
+                children: hasChildren ? initializedСopy(children, id) : undefined,
+                id:id,
+                name,
+            };
+            setListEntities(entities => [...entities,name])
+        }
+    }
+    return nodesCopy;
+  }
 
   useEffect(async () => {
-  const responseDriver = await fetch('/api/drivers');
-  const responseGroup = await fetch('/api/groups');
-  if (responseDriver.ok) {
-    const res =  await responseDriver.json()
-    setSeq(res);
-  }
-  if (responseGroup.ok) {
-    const res =  await responseGroup.json()
-    setGroups(res);
-  }
-}, []);
+    loadEntities()
+    const responseDriver = await fetch('/api/drivers');
+    if (responseDriver.ok) {
+      const res =  await responseDriver.json()
+      setSeq(res);
+    }
+
+  }, []);
   return (
     <>
       <FormControl variant="filled" margin="normal" fullWidth>
@@ -155,7 +206,8 @@ const ReportPrintFilter = ({ setReport, report, dateFilter }) => {
       </FormControl>
       <FormControl variant="filled" margin="normal" fullWidth>
         <InputLabel>Numéro de séquence</InputLabel>
-        <Select value={report} onChange={(e) => setReport(e.target.value)}>
+        <Select onChange={(e) => {setListFilters(prev => {prev[0].seqNumber = e.target.value; return [...prev]});}}>
+        <MenuItem key="{id}" value=" "> </MenuItem>
         {seq.filter((word) => word.name.startsWith('S*')).map((item, id) => (
                     <MenuItem key={id} value={item.name.substring(2)}>{item.name.substring(2)}</MenuItem>
                 ))}
@@ -163,9 +215,9 @@ const ReportPrintFilter = ({ setReport, report, dateFilter }) => {
       </FormControl>
       <FormControl variant="filled" margin="normal" fullWidth>
         <InputLabel>Entité</InputLabel>
-        <Select value={report} onChange={(e) => setReport(e.target.value)}>
-        {groups.map((item, id) => (
-                    <MenuItem key={id} value={item.name}>{item.name}</MenuItem>
+        <Select onChange={(e) => setListFilters(prev => {prev[0].entitie = e.target.value; return [...prev]})}>
+        {listEntities.map((item, id) => (
+                    <MenuItem key={id} value={item}>{item}</MenuItem>
                 ))}
         </Select>
       </FormControl>
@@ -182,12 +234,14 @@ const ReportPrintFilter = ({ setReport, report, dateFilter }) => {
 export default function PrintReportPage() {
     const [report, setReport] = useState('vitesse');
     const [items, setItems] = useState([])
-
+    const [filterDate,setfilterDate] = useState([{from:moment().subtract(1, 'hour'),to:moment(),period:'today'}])
+    const [listAllFilters,setlistAllFilters] =useState([{seqNumber:"",entitie:"",from:"",to:"",period:"today"}])
     return (
         <div>
-        <ReportLayoutPage filter={<ReportPrintFilter report={report} setReport={setReport} dateFilter={<Filter setItems={setItems} report={report} />} />}>
-            <ReportToPrint report={report}  />
+        <ReportLayoutPage filter={<ReportPrintFilter filterDate={filterDate} setlistAllFilters = {setlistAllFilters}  report={report} setReport={setReport} dateFilter={<Filter setItems={setItems} report={report} setfilterDate={setfilterDate}  />} />}>
+            <ReportToPrint report={report}  listAllFilters = {listAllFilters} />
         </ReportLayoutPage>
         </div>
     )
 } 
+

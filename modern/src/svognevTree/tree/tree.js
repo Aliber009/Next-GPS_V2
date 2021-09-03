@@ -43,13 +43,19 @@ class Tree extends Component {
         this.loadState()
     }
 
+    componentDidUpdate(prev){
+        console.log(this.state.selected)
+        console.log(this.state.nodes)
+    }
+
     initializedСopy(nodes, location) {
         const nodesCopy = [];
         for (let i = 0; i < nodes.length; i++) {
-            const { children, name } = nodes[i];
+            const { children, name,seqAttribut } = nodes[i];
             const hasChildren = children !== undefined;
             const id = location ? `${location}.${i + 1}` : `${i + 1}`;
-            nodesCopy[i] = { 
+            if(seqAttribut == true){
+                nodesCopy[i] = { 
                     children: hasChildren ? this.initializedСopy(children, id) : undefined,
                     changeTitle: this.changeTitle(id),
                     removeNode: this.removeNode(id),
@@ -57,15 +63,32 @@ class Tree extends Component {
                     addChildtwo: this.addChildtwo(id),
                     id:id,
                     name,
-            };
+                    seqAttribut : seqAttribut
+                };
+            }else if(seqAttribut == undefined){
+                nodesCopy[i] = { 
+                    children: hasChildren ? this.initializedСopy(children, id) : undefined,
+                    changeTitle: this.changeTitle(id),
+                    removeNode: this.removeNode(id),
+                    addChild: this.addChild(id),
+                    addChildtwo: this.addChildtwo(id),
+                    id:id,
+                    name,
+                };
+            }
+            
         }
+        //console.log(nodesCopy)
         return nodesCopy;
     }
 
     changeTitle(id) {
+        //console.log(id)
         return (newTitle) => {
             id = id.split(".").map((str) => parseInt(str));
+            console.log(id)
             const nodes = this.initializedСopy(this.state.nodes);
+            console.log(nodes)
             let changingNode = nodes[id[0] - 1];
 
             if (id.length > 1) {
@@ -73,9 +96,9 @@ class Tree extends Component {
                     changingNode = changingNode.children[id[i] - 1];
                 }
             }
-
+            console.log(changingNode)
             changingNode.name = newTitle;
-            this.setState({ nodes });
+            this.setState({ nodes }, () => {this.saveState()});
         };
     }
     
@@ -96,8 +119,10 @@ class Tree extends Component {
         };
         
         const nodes = [...this.state.nodes, newNode];
-        this.setState({ nodes });
+        this.setState({ nodes },() => {this.saveState()});
     }
+
+    
 
     addChild(id) {
         
@@ -120,51 +145,56 @@ class Tree extends Component {
             this.setState({open:true})
         }
     }
+
     
+    
+
     addSeq(ids,selection){
         return () => {
             
             const id = ids.split(".").map((str) => parseInt(str));
             const nodes = this.initializedСopy(this.state.nodes);
-            let changingNode = nodes[id[0] - 1] || [];
 
+            let changingNode = nodes[id[0] - 1] || [];
             if (id.length > 1) {
                 for (let i = 1; i < id.length; i++) {
                     changingNode = changingNode.children[id[i] - 1];
                 }
             }
-
             if (changingNode.children === undefined) {
                 changingNode.children = [];
             }
            //console.log(changingNode.name)
-           for(var i=0;i<selection.length;i++){
-            var idd = `${id.join(".")}.${changingNode.children.length + 1}`;
-            
-            fetch('/flsk/histoEntite',{method:'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:JSON.stringify({
-                SeqId:selection[i].uniqueId,
-                Centre:changingNode.name,
-                Date:new Date().toLocaleDateString("fr-FR",{year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"})
-            })
-        })
+            for(var i=0;i<selection.length;i++){
+               
+                var idd = `${id.join(".")}.${changingNode.children.length + 1}`;
+                
+                fetch('/flsk/histoEntite',{method:'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:JSON.stringify({
+                    SeqId:selection[i].uniqueId,
+                    Centre:changingNode.name,
+                    Date:new Date().toLocaleDateString("fr-FR",{year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"})
+                    })
+                })
 
-            changingNode.children = [
-                ...changingNode.children,
-                { 
-                    children: undefined,
-                    changeTitle: this. changeTitle(idd),
-                    removeNode: this.removeNode(idd),
-                    addChild: this.addChild(idd),
-                    addChildtwo: this.addChildtwo(idd),
-                    id:idd,
-                    name: selection[i].name,
-                }];
+                changingNode.children = [
+                    ...changingNode.children,
+                    { 
+                        children: undefined,
+                        changeTitle: this. changeTitle(idd),
+                        removeNode: this.removeNode(idd),
+                        addChild: this.addChild(idd),
+                        addChildtwo: this.addChildtwo(idd),
+                        id:idd,
+                        name: selection[i].name,
+                        seqAttribut : true
+                    }
+                ];
             }
 
             //this.setState({ nodes });
-            this.setState({ nodes });
+            this.setState({ nodes },() => {this.saveState()});
 
             
         }
@@ -176,11 +206,12 @@ class Tree extends Component {
         this.setState({open:false})
     }
     handleCallback = (childData)=> {
-        
-            
+        console.log(childData)    
         this.setState({selected: childData})
         
     }
+
+   
   
       selection = (open,handleClose) => {return (
         <div>
@@ -241,7 +272,7 @@ class Tree extends Component {
                     name: "",
                 }];
 
-            this.setState({ nodes });
+            this.setState({ nodes },() => {this.saveState()});
         }
     }
     
@@ -263,7 +294,7 @@ class Tree extends Component {
     
                 } else {
                     let changingNode = nodes[id[0] - 1];
-                    
+                    //console.log(changingNode)
                     for (let i = 2; i < id.length; i++) {
                         changingNode = changingNode.children[id[i - 1] - 1];
                     }
@@ -276,7 +307,7 @@ class Tree extends Component {
                     ];
                     changingNode.children = newChildren;
     
-                    this.setState({ nodes: this.initializedСopy(nodes) });
+                    this.setState({ nodes: this.initializedСopy(nodes) },() => {this.saveState()});
             }
         }
     }
@@ -284,6 +315,7 @@ class Tree extends Component {
     }
 
     saveState() {
+        console.log(this.state.nodes)
         //console.log((this.state.nodes))
         //this.setState({ savedNodes: this.initializedСopy(this.state.nodes) });
         fetch('/flsk/entites/1',
@@ -301,7 +333,12 @@ class Tree extends Component {
         //this.setState({ nodes: this.initializedСopy(this.state.savedNodes) });
         fetch('/flsk/entites',{method:"GET"})
         .then(res => res.json())
-        .then(res=>this.setState({ nodes: this.initializedСopy(res[0].arr) }))
+        .then(
+            res=>{
+                if(res.length === 0 ){this.setState({ nodes: this.initializedСopy(res) })}
+                else if( res.length > 0) {this.setState({ nodes: this.initializedСopy(res[0].arr) })}  
+            }
+        )
         this.setState({loading:false})
     }
 
@@ -310,47 +347,58 @@ class Tree extends Component {
     }
 
     nodesToString() {
+        console.log(this.simplify(this.state.nodes))
         return JSON.stringify(this.simplify(this.state.nodes), undefined, 2);
     }
 
     simplify(nodes) {
         const nodesCopy = [];
         for (let i = 0; i < nodes.length; i++) {
-            const { children, name ,id} = nodes[i];
+            const { children, name ,id,seqAttribut} = nodes[i];
+            //console.log(nodes[i])
+            //console.log({ children, name ,id,seqAttribut})
             const hasChildren = children !== undefined && children.length > 0;
-            nodesCopy[i] = { 
-                name,
-                id,
-                children: hasChildren ? this.simplify(children) : undefined,
-            };
+            if(seqAttribut == true){
+                nodesCopy[i] = { 
+                    name,
+                    id,
+                    seqAttribut,
+                    children: hasChildren ? this.simplify(children) : undefined,
+                };
+            }else if (seqAttribut===undefined ){
+                nodesCopy[i] = { 
+                    name,
+                    id,
+                    children: hasChildren ? this.simplify(children) : undefined,
+                };
+            }
+            //console.log(nodesCopy)
         }
         return nodesCopy;
     }
 
     render() {
         const { nodes, savedNodes, selected } = this.state;
-        const { addRootElement, saveState, 
+        const { addRootElement, 
                 loadState, onTextChange, nodesToString} = this;
-        const hasSaved = savedNodes.length !== 0;
 
         return (
             <>
             <MainToolbar />
             {!this.state.loading?(
-            <div className="Tree">
-            
+            <div className="Tree" style={{paddingTop : 15}}>
                 <div className="Tree-LeftSide">
-                <ControlPanel {...{ hasSaved, saveState, loadState }} />
-                  <ul className="Nodes">
-                    { nodes.map((nodeProps) => {  
-                     const { id, ...others } = nodeProps;
-                      return (                       
-                        <TreeNode key={id} {...others} />  
-                      );})    
-                    }
-                  </ul>
-                  <AddButton onClick={addRootElement} />
-                  {this.selection(this.state.open,this.handleClose)}
+                   
+                    <ul className="Nodes">
+                        { nodes.map((nodeProps) => { 
+                        const { id, ...others } = nodeProps;
+                        return (                       
+                            <TreeNode key={id} {...others} />  
+                        );})    
+                        }
+                    </ul>
+                    <AddButton onClick={addRootElement} />
+                    {this.selection(this.state.open,this.handleClose)}
                </div>
                
                <div className="Tree-RightSide">
@@ -359,6 +407,7 @@ class Tree extends Component {
                      onChange={onTextChange}
                    />
                </div>
+
             </div>
             ):(<LinearProgress />)}
             </>
