@@ -7,6 +7,7 @@ import PlaylistAddOutlinedIcon from '@material-ui/icons/PlaylistAddOutlined';
 import { Tooltip } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import InputBase from '@material-ui/core/InputBase';
+import InsertLinkIcon from '@material-ui/icons/InsertLink';
 
 
 const EditableItem = (props) => {
@@ -37,12 +38,15 @@ const EditableItem = (props) => {
     return (
         <div className="EditableItem">
         
-          <Tooltip title={"Ajouter sous groupe"} arrow>       
+          <Tooltip title={ !attributStatut?"Ajouter sous groupe":"Clé seqentiel"} arrow>       
             <IconButton
-              disabled={attributStatut}
+              //disabled={attributStatut}
                className="EditableItem-Button EditableItem-Button_add"
-               onClick={addChildtwo}>
+               onClick={()=> {if(!attributStatut){addChildtwo()}else{return}}}>
+                 {!attributStatut?(
                  <AddIcon />
+                 ):(<InsertLinkIcon style={{fill:"#3DB2FF"}} />)
+                 }
             </IconButton>
             </Tooltip> 
             
@@ -50,23 +54,23 @@ const EditableItem = (props) => {
             
             <InputBase
               className="EditableItem-Text"
-              onChange={(e) => { changeTitle(e.target.value) }}
+              onChange={(e) => { if(!attributStatut){changeTitle(e.target.value)}else {return } }}
               value={name}
-              disabled={attributStatut}
+              //disabled={attributStatut}
               placeholder="New Item"
             />
-            
+            {!attributStatut?(
             <Tooltip title={"Ajouter Clés sequentielles"} arrow> 
            
               <IconButton
                 style={{marginLeft:5}}
-                disabled={attributStatut}
+                //disabled={attributStatut}
                 className="EditableItem-Button EditableItem-Button_add"
                 onClick={addChild}>
                 <PlaylistAddOutlinedIcon />
               </IconButton>
-            
             </Tooltip> 
+             ):(<> </>)}
             <Tooltip title={"Supprimer groupe"} arrow>  
             <IconButton
              style={{marginLeft:10}}
