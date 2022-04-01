@@ -56,8 +56,8 @@ fuel = random.randint(0, 80)
 # pika connection config
 
 credentials = pika.PlainCredentials('admin','admin')
-parameters = pika.ConnectionParameters('23.99.133.155',
-                                   5672,
+parameters = pika.ConnectionParameters('',
+                                   ,
                                     '/',
                                     credentials)
 connection=pika.BlockingConnection(parameters)
